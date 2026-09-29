@@ -1,4 +1,4 @@
-# Playing Rollback v0.2.0 on your Mac
+# Playing Rollback v0.3.0 on your Mac
 
 This is a playable **training prototype** for the Episode 1 systems. Its twelve drills are temporary gameplay scenarios. The completed Episode 1 story has not yet been supplied for integration.
 
@@ -14,9 +14,9 @@ Boost takes a short time to recharge; the HUD shows `B OK` when it is ready. Gre
 
 ## Exploring the world
 
-Each map is now ten screens wide. Fly east or west to explore; the camera follows once you move outside the central band, leaving 56 pixels ahead before the screen edge. Reversing direction lets you move across the central band before the camera follows back. At the two ends of the world, the camera stops.
+Each map is now **1,600 × 1,440 pixels**: ten times the original width and ten times its height. Fly in any direction to explore. The camera follows outside a central resting band, leaving 56 pixels ahead horizontally and 40 pixels between the ship and either edge of the playable area vertically. Reversing direction lets the ship cross the resting band before the camera follows back. The camera stops at the four world boundaries.
 
-The bottom-right counter shows your current sector out of ten. The arrow points toward the nearest remaining mission target; `=` means you are horizontally aligned, so look above or below. In rescue drills, `HOME` points back to the blue pad after the third pod is collected. Escort the transport across the map; the heavy boss waits near the eastern end. Death checkpoints restore your position and camera along with the mission state.
+The bottom-right readout is **column/row**, each from 01 to 10. The two direction indicators point horizontally and vertically toward the nearest remaining mission target; `=` means aligned on that axis. In rescue drills, `HOME` points back to the blue pad in the northwest after the third pod is collected. The transport crosses the map in both directions; the heavy boss waits in the southeast. Death checkpoints restore both camera axes and your world position along with the mission state. Travel drills have longer timers to suit the expanded area.
 
 ## Keeping progress
 

@@ -24,29 +24,36 @@ static const palette_color_t sprite_palettes[32]={
 };
 static uint8_t hud_hull=255,hud_boost=255,hud_progress=255,hud_goal=255,hud_core=255,hud_channel=255;
 static uint16_t hud_time=65535;
-static uint8_t hud_sector=255,hud_direction=255;
+static uint8_t hud_sector=255,hud_row=255,hud_direction=255;
 static const char *hud_radio;
-static volatile uint8_t arena_active,next_scroll,line_scroll;
-static int16_t loaded_column;
+static volatile uint8_t arena_active,next_scroll_x,next_scroll_y;
+static int16_t loaded_column,loaded_row;
 
-// The background scrolls only between the two fixed HUD bands.
-// Latch alongside OAM at VBlank so sprites and terrain use the same camera.
+// A continuous bottom window keeps HUD rendering independent of tile-stream
+// timing. It does not depend on scanline interrupts or window-counter tricks.
 static void scroll_vblank(void) NONBANKED {
-    SCX_REG=0; line_scroll=next_scroll; LYC_REG=16;
-}
-static void scroll_lcd(void) NONBANKED {
-    if(LYC_REG==16) { SCX_REG=arena_active?line_scroll:0; LYC_REG=128; }
-    else { SCX_REG=0; LYC_REG=16; }
+    SCX_REG=next_scroll_x; SCY_REG=next_scroll_y;
 }
 static void tile(uint8_t x,uint8_t y,uint8_t n,uint8_t p) {
-    VBK_REG=1; set_bkg_tile_xy(x,y,p); VBK_REG=0; set_bkg_tile_xy(x,y,n);
+    if(arena_active) {
+        if(y>=16) y-=14;
+        VBK_REG=1; set_win_tile_xy(x,y,p|0x80); VBK_REG=0; set_win_tile_xy(x,y,n);
+    } else {
+        VBK_REG=1; set_bkg_tile_xy(x,y,p); VBK_REG=0; set_bkg_tile_xy(x,y,n);
+    }
 }
 void text_at(uint8_t x,uint8_t y,const char *s,uint8_t palette) {
     uint8_t line[20],n=0;
     while(*s && x+n<20) line[n++]=(uint8_t)*s++;
     if(!n) return;
-    VBK_REG=1; fill_bkg_rect(x,y,n,1,palette);
-    VBK_REG=0; set_bkg_tiles(x,y,n,1,line);
+    if(arena_active) {
+        if(y>=16) y-=14;
+        VBK_REG=1; fill_win_rect(x,y,n,1,palette|0x80);
+        VBK_REG=0; set_win_tiles(x,y,n,1,line);
+    } else {
+        VBK_REG=1; fill_bkg_rect(x,y,n,1,palette);
+        VBK_REG=0; set_bkg_tiles(x,y,n,1,line);
+    }
 }
 void number_at(uint8_t x,uint8_t y,uint16_t n,uint8_t digits,uint8_t palette) {
     char line[6]; uint8_t i=digits;
@@ -86,18 +93,21 @@ void video_init(void) {
     set_bkg_palette(0,8,bg_palettes); set_sprite_palette(0,8,sprite_palettes);
     BGP_REG=0xe4; OBP0_REG=0xe4; OBP1_REG=0xe4;
     SPRITES_8x16; HIDE_WIN; SHOW_BKG; SHOW_SPRITES;
+    LCDC_REG|=LCDCF_WIN9C00; move_win(7,112);
     move_bkg(0,0);
     CRITICAL {
-        add_VBL(scroll_vblank); add_LCD(scroll_lcd);
-        STAT_REG=STATF_LYC; LYC_REG=16;
+        add_VBL(scroll_vblank);
     }
-    set_interrupts(VBL_IFLAG|LCD_IFLAG);
+    set_interrupts(VBL_IFLAG);
 }
 void page_begin(void) {
     uint8_t i;
-    DISPLAY_OFF; HIDE_SPRITES; arena_active=0; next_scroll=0;
+    DISPLAY_OFF; HIDE_SPRITES; HIDE_WIN;
+    arena_active=0; next_scroll_x=next_scroll_y=0;
     VBK_REG=1; fill_bkg_rect(0,0,32,32,0);
     VBK_REG=0; fill_bkg_rect(0,0,32,32,32);
+    VBK_REG=1; fill_win_rect(0,0,20,4,0x80);
+    VBK_REG=0; fill_win_rect(0,0,20,4,32);
     for(i=0;i<40;i++) hide_sprite(i);
     move_bkg(0,0);
 }
@@ -117,7 +127,7 @@ void draw_title(uint8_t choice) {
     text_at(3,13,"RESUME CODE",choice==1?3:0);
     text_at(3,15,"FIELD MANUAL",choice==2?3:0);
     text_at(1,11+choice*2,">",3);
-    text_at(2,17,"A SELECT  V0.2.0",6);
+    text_at(2,17,"A SELECT  V0.3.0",6);
     page_end();
 }
 void draw_selection(void) {
@@ -149,51 +159,63 @@ void draw_brief(void) {
     }
     text_at(1,16,"B BACK",6); page_end();
 }
+static void map_cell(int16_t column,int16_t row,uint8_t *n,uint8_t *p) {
+    uint8_t layout=missions[mission_index].layout;
+    uint8_t local_column=(uint8_t)column,local_row=(uint8_t)row;
+    while(local_column>=20) local_column-=20;
+    while(local_row>=18) local_row-=18;
+    if(column==0 || column>=WORLD_WIDTH/8-1 || row<=2 || row>=WORLD_HEIGHT/8-3) { *n=103;*p=3; }
+    else if(map_solid(column*8+4,row*8+4)) { *n=(row&1)?101:102;*p=2; }
+    else if(layout==0) { *n=96+((column+row)&1);*p=1; }
+    else if(layout==1) { *n=(local_row==9 || local_column==10)?99:98;*p=2; }
+    else { *n=((column+row)%5==0)?110:98;*p=2; }
+    // Small floor intersections distinguish the grid without fencing it in.
+    if(local_column==10 && local_row==9) { *n=109;*p=7; }
+    if(row>=13 && row<15 && column>=9 && column<11) { *n=111;*p=7; }
+}
 static void map_column(int16_t column) {
-    uint8_t y,p,n,tiles[14],palettes[14],layout=missions[mission_index].layout;
-    uint8_t sector=column/20,local=column%20;
-    for(y=2;y<16;y++) {
-        if(column==0 || column>=WORLD_WIDTH/8-1 || y==2 || y==15) { n=103;p=3; }
-        else if(map_solid(column*8+4,y*8+4)) { n=(y&1)?101:102;p=2; }
-        else if(layout==0) { n=96+((column+y)&1);p=1; }
-        else if(layout==1) { n=(y==9 || y==10)?99:98;p=2; }
-        else { n=((column+y)%5==0)?110:98;p=2; }
-        if(y==2 && local==9) { n='0'+(sector+1)/10;p=7; }
-        if(y==2 && local==10) { n='0'+(sector+1)%10;p=7; }
-        if(y>=13 && y<15 && column>=9 && column<11) { n=111;p=7; }
-        tiles[y-2]=n; palettes[y-2]=p;
-    }
-    VBK_REG=1; set_bkg_tiles(column&31,2,1,14,palettes);
-    VBK_REG=0; set_bkg_tiles(column&31,2,1,14,tiles);
+    uint8_t i,tiles[15],palettes[15];
+    for(i=0;i<15;i++) map_cell(column,loaded_row+i,&tiles[i],&palettes[i]);
+    VBK_REG=1; set_bkg_tiles(column&31,loaded_row&31,1,15,palettes);
+    VBK_REG=0; set_bkg_tiles(column&31,loaded_row&31,1,15,tiles);
+}
+static void map_row(int16_t row) {
+    uint8_t i,tiles[21],palettes[21];
+    for(i=0;i<21;i++) map_cell(loaded_column+i,row,&tiles[i],&palettes[i]);
+    VBK_REG=1; set_bkg_tiles(loaded_column&31,row&31,21,1,palettes);
+    VBK_REG=0; set_bkg_tiles(loaded_column&31,row&31,21,1,tiles);
 }
 static void stream_map(void) {
-    int16_t column=game.camera_x>>3;
+    int16_t column=game.camera_x>>3,row=game.camera_y>>3;
     while(loaded_column<column) { loaded_column++; map_column(loaded_column+20); }
     while(loaded_column>column) { loaded_column--; map_column(loaded_column); }
-    next_scroll=(uint8_t)game.camera_x;
+    while(loaded_row<row) { loaded_row++; map_row(loaded_row+14); }
+    while(loaded_row>row) { loaded_row--; map_row(loaded_row); }
+    next_scroll_x=(uint8_t)game.camera_x; next_scroll_y=(uint8_t)game.camera_y;
 }
 void draw_arena(void) {
     uint8_t i;
     page_begin();
-    loaded_column=game.camera_x>>3;
+    loaded_column=game.camera_x>>3; loaded_row=game.camera_y>>3;
     for(i=0;i<21;i++) map_column(loaded_column+i);
     hud_hull=hud_boost=hud_progress=hud_goal=hud_core=hud_channel=255;
-    hud_time=65535; hud_radio=0; hud_sector=hud_direction=255;
+    hud_time=65535; hud_radio=0; hud_sector=hud_row=hud_direction=255;
+    arena_active=1;
     number_at(0,1,mission_index+1,2,3); text_at(3,1,mode_names[missions[mission_index].type],7);
-    next_scroll=(uint8_t)game.camera_x; arena_active=1;
-    draw_game(); page_end(); SHOW_SPRITES;
+    next_scroll_x=(uint8_t)game.camera_x; next_scroll_y=(uint8_t)game.camera_y;
+    draw_game(); SHOW_WIN; SHOW_SPRITES; page_end();
 }
 static void ship(uint8_t slot,int16_t x,int16_t y,uint8_t first,uint8_t palette) {
-    x-=game.camera_x;
+    x-=game.camera_x; y-=game.camera_y;
     // Clip before converting to 8-bit OAM coordinates; distant objects must not wrap.
-    if(x<=-8 || x>=168) return;
+    if(x<=-8 || x>=168 || y<=-8 || y>104) return;
     set_sprite_tile(slot,first); set_sprite_tile(slot+1,first+2);
     set_sprite_prop(slot,palette); set_sprite_prop(slot+1,palette);
     move_sprite(slot,(uint8_t)x,(uint8_t)y+8); move_sprite(slot+1,(uint8_t)x+8,(uint8_t)y+8);
 }
 static void bullet(uint8_t slot,int16_t x,int16_t y,uint8_t first,uint8_t palette) {
-    x-=game.camera_x;
-    if(x<=-4 || x>=164) return;
+    x-=game.camera_x; y-=game.camera_y;
+    if(x<=-4 || x>=164 || y<=-4 || y>104) return;
     set_sprite_tile(slot,first); set_sprite_prop(slot,palette);
     move_sprite(slot,(uint8_t)x+4,(uint8_t)y+8);
 }
@@ -201,8 +223,10 @@ void draw_game(void) {
     uint8_t i,type=missions[mission_index].type,progress=game.progress,goal=missions[mission_index].goal;
     uint8_t channel_display=(type==RESCUE && game.progress>=3)?2:(game.channel!=0);
     uint16_t left=missions[mission_index].seconds-game.ticks/60u;
-    int16_t target=game_target_x()-game.x;
-    uint8_t direction=target>16?2:(target<-16?0:1),sector=game.x/160+1;
+    int16_t tx,ty;
+    uint8_t direction,sector=game.x/160+1,row=game.y/144+1;
+    game_target(&tx,&ty); tx-=game.x; ty-=game.y;
+    direction=(tx>16?2:(tx<-16?0:1))+3*(ty>16?2:(ty<-16?0:1));
     static const uint8_t object_tile[7]={0,40,44,48,52,64,70};
     static const uint8_t object_palette[7]={0,7,2,3,4,3,3};
     stream_map();
@@ -237,7 +261,7 @@ void draw_game(void) {
         number_at(14,1,progress,2,0); text_at(16,1,"/",6); number_at(17,1,goal,2,6);
         hud_progress=progress; hud_goal=goal;
     }
-    if(hud_channel!=channel_display || hud_core!=game.objects[0].hp || hud_sector!=sector || hud_direction!=direction) {
+    if(hud_channel!=channel_display || hud_core!=game.objects[0].hp || hud_sector!=sector || hud_row!=row || hud_direction!=direction) {
         char nav[21];
         memset(nav,' ',20); nav[20]=0;
         if(type==SABOTAGE && game.channel) {
@@ -248,12 +272,14 @@ void draw_game(void) {
         } else if(type==RESCUE && game.progress>=3) memcpy(nav,"HOME",4);
         else if(type==SURVIVAL) memcpy(nav,"ROAM",4);
         else memcpy(nav,"TARGET",6);
-        nav[11]=direction==2?'>':(direction==0?'<':'=');
-        nav[15]='0'+sector/10; nav[16]='0'+sector%10; memcpy(nav+17,"/10",3);
+        nav[10]=tx>16?'>':(tx<-16?'<':'=');
+        nav[11]=ty>16?'V':(ty<-16?105:'=');
+        nav[15]='0'+sector/10; nav[16]='0'+sector%10;
+        nav[17]='/'; nav[18]='0'+row/10; nav[19]='0'+row%10;
         text_at(0,16,nav,7);
         hud_channel=channel_display;
         hud_core=game.objects[0].hp;
-        hud_sector=sector; hud_direction=direction;
+        hud_sector=sector; hud_row=row; hud_direction=direction;
     }
     message=radio_timer?radio_line:missions[mission_index].hint;
     if(hud_radio!=message) {

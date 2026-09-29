@@ -1,6 +1,6 @@
 # Chromatic DevDay cartridge setup on Mac
 
-Verified September 29, 2026. Download a [Rollback release](https://github.com/Zollicoff/Rollback/releases) onto the Mac connected to your Chromatic. The v0.2.0 scrolling ROM is built and emulator-verified. It has not been flashed to hardware.
+Verified September 29, 2026. Download a [Rollback release](https://github.com/Zollicoff/Rollback/releases) onto the Mac connected to your Chromatic. The v0.3.0 world ROM is built and emulator-verified. It has not been flashed to hardware.
 
 ## Official DevDay instructions
 

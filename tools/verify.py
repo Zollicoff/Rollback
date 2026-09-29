@@ -70,7 +70,8 @@ for _ in range(1400):
 assert pilot.checkpoint_seen,'Raid did not produce its midpoint checkpoint'
 checkpoint_seconds=pilot.checkpoint_time
 checkpoint_camera=c.camera();checkpoint_player=c.player();checkpoint_progress=c.line(1)[14:19]
-assert checkpoint_camera>256,'Checkpoint did not exercise a distant world location'
+checkpoint_camera_y=c.camera_y()
+assert checkpoint_camera>256 and checkpoint_camera_y>256,'Checkpoint did not exercise both world axes'
 c.screenshot('checkpoint')
 # Observe failure with no controls, then invoke the ROM's own rewind command.
 c.hold([],1)
@@ -84,7 +85,9 @@ assert c.line(0).startswith('HP'),'Mulligan did not return to gameplay'
 assert int(c.line(0)[16:19])>=checkpoint_seconds-1,'Rewind failed to restore the earlier mission clock'
 assert int(c.line(0)[16:19])<initial_seconds-5,'Rewind restarted the mission instead of its midpoint checkpoint'
 assert abs(c.camera()-checkpoint_camera)<=8,'Rewind lost the world camera'
+assert abs(c.camera_y()-checkpoint_camera_y)<=8,'Rewind lost the vertical camera'
 assert abs(c.player()[0]-checkpoint_player[0])<=12,'Rewind lost the world position'
+assert abs(c.player()[1]-checkpoint_player[1])<=12,'Rewind lost the vertical world position'
 assert c.line(1)[14:19]==checkpoint_progress,'Rewind lost the completed objectives'
 assert 'TIMELINE RESTORED' in c.text()
 c.screenshot('rewind')

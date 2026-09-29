@@ -14,6 +14,7 @@ class Console:
         self.held=set()
         self.last_player=(80,112)
         self.last_camera=0
+        self.last_camera_y=0
         self.tick(180)
 
     def tick(self,frames=1):
@@ -35,9 +36,24 @@ class Console:
         self.tick(2)
 
     def line(self,y):
-        # The on-cartridge font's public mapping uses ASCII tile identifiers.
+        # ASCII tile identifiers plus the authored up-arrow tile. During play,
+        # logical rows 0/1/16/17 are the four rows of the bottom HUD window.
         if not self.emu.memory[0xff40]&0x80:return ' '*20
-        return ''.join(chr(self.emu.tilemap_background[x,y]&255) if 32 <= (self.emu.tilemap_background[x,y]&255)<96 else ' ' for x in range(20))
+        if self.emu.memory[0xff40]&0x20:
+            if 2<=y<16:return ' '*20
+            window=True;row=y-14 if y>=16 else y
+        else:window=False;row=y
+        def glyph(tile):
+            tile&=255
+            return '^' if tile==105 else (chr(tile) if 32<=tile<96 else ' ')
+        return ''.join(glyph(self.tile(x,row,window)) for x in range(20))
+
+    def tile(self,x,y,window=False):
+        lcdc=self.emu.memory[0xff40]
+        base=0x9c00 if lcdc&(0x40 if window else 0x08) else 0x9800
+        # Bank zero holds tile IDs. The CPU may be paused while VBK selects
+        # bank one to stream palettes; reading that bank would invent walls/text.
+        return self.emu.memory[0,base+(y&31)*32+(x&31)]
 
     def text(self): return '\n'.join(self.line(y) for y in range(18))
 
@@ -64,14 +80,27 @@ class Console:
         self.last_camera+=delta
         return self.last_camera
 
+    def camera_y(self):
+        if not self.line(0).startswith('HP'):return self.last_camera_y
+        raw=self.emu.screen.tilemap_position_list[64][1]
+        row=self.line(16)[18:20]
+        player=self.sprite_screen(0)
+        py=player[1] if player else self.last_player[1]
+        if row.isdigit():
+            lo=(int(row)-1)*144
+            candidates=[raw+256*n for n in range(6) if 0<=raw+256*n<=1328 and lo<=raw+256*n+py<lo+144]
+            if candidates:self.last_camera_y=candidates[0];return self.last_camera_y
+        self.last_camera_y+=(raw-self.last_camera_y+128)%256-128
+        return self.last_camera_y
+
     def sprite(self,slot):
         value=self.sprite_screen(slot)
-        return (value[0]+self.camera(),*value[1:]) if value else None
+        return (value[0]+self.camera(),value[1]+self.camera_y(),*value[2:]) if value else None
 
     def player(self):
         p=self.sprite_screen(0)
         if p:self.last_player=p[:2]
-        return self.last_player[0]+self.camera(),self.last_player[1]
+        return self.last_player[0]+self.camera(),self.last_player[1]+self.camera_y()
 
     def save(self):
         f=io.BytesIO();self.emu.save_state(f);return f.getvalue()

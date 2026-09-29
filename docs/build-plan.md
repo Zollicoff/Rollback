@@ -20,6 +20,8 @@ Version 0.2.0 expands every world to 1,600 pixels wide. A horizontal camera foll
 
 The built ROM declares CGB-only, MBC5, 64 KiB ROM, and zero external RAM. Its physical cartridge compatibility is still unverified. `make test` checks the actual executable in an emulator, including complete controller-input playthroughs of all twelve drills and midpoint recovery after death. The release report states its exact ROM hash.
 
+Version 0.3.0 addresses Zach’s clarification that the map must expand vertically as well. The world is now 1,600 × 1,440 pixels. Both camera axes have a resting band, streamed rows/columns, and boundary clamping; the HUD uses a separate fixed panel along the bottom. Terrain and objectives occupy both dimensions, direction indicators cover both axes, and the grid readout shows column/row.
+
 ## ROM target and toolchain
 
 Chromatic runs Game Boy and Game Boy Color cartridges. The output must therefore contain native GB/GBC code and a valid cartridge header. GB/GBC ROMs are commonly named `.gb` or `.gbc`; a `.rom` filename alone does not identify or convert the executable format. Use the filename expected by the supplied cartridge-writing utility.

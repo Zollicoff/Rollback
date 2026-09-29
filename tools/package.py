@@ -4,7 +4,7 @@ import json
 import zipfile
 from pathlib import Path
 
-version='0.2.0-scrolling'
+version='0.3.0-world'
 rom=Path('build/rollback-e1-training.gbc').read_bytes()
 digest=hashlib.sha256(rom).hexdigest()
 report=json.loads(Path('build/verification.json').read_text())
@@ -20,7 +20,7 @@ files={
  'LICENSES/GBDK_LIBRARY.txt':Path('LICENSES/GBDK_LIBRARY.txt').read_bytes(),
  'verification.json':Path('build/verification.json').read_bytes(),
 }
-for name in ('title','gameplay','checkpoint','rewind','drill-12-pass','scrolling-west','scrolling-middle','scrolling-east','scrolling-return'):
+for name in ('title','gameplay','checkpoint','rewind','drill-12-pass','world-northwest','world-northeast','world-southeast','world-southwest','world-return','world-diagonal'):
     files['screenshots/'+name+'.png']=Path('build/screenshots/'+name+'.png').read_bytes()
 files['SHA256SUMS']=''.join(f'{hashlib.sha256(content).hexdigest()}  {name}\n' for name,content in sorted(files.items())).encode()
 dist=Path('dist');dist.mkdir(exist_ok=True)

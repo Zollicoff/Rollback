@@ -1,5 +1,14 @@
 # Changes
 
+## 0.3.0-world — September 29, 2026
+
+- Expand the vertical dimension too: worlds are now 1,600 × 1,440 pixels, ten times the original width and height.
+- Follow the ship on both axes, including diagonals, with horizontal and vertical padding and clamping at all four boundaries.
+- Stream both rows and columns while keeping the HUD in its own fixed bottom panel.
+- Distribute terrain and objectives across a 10-by-10 grid; show both target directions and the current column/row.
+- Restore both camera axes on pause/resume and death checkpoints. Extend travel timers for the larger area.
+
+
 ## 0.2.0-scrolling — September 29, 2026
 
 - Expand every world from one screen to ten screens wide (1,600 pixels).

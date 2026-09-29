@@ -2,15 +2,15 @@
 
 A native Game Boy Color flight-and-combat game for the **ModRetro Chromatic**. Fly, fight, protect your objectives, and restore the timeline when a sortie goes wrong.
 
-**[Download the playable ROM](https://github.com/Zollicoff/Rollback/releases/tag/v0.2.0-scrolling)** · [Mac & cartridge setup](docs/mac-cartridge-setup.md) · [Build plan](docs/build-plan.md)
+**[Download the playable ROM](https://github.com/Zollicoff/Rollback/releases/tag/v0.3.0-world)** · [Mac & cartridge setup](docs/mac-cartridge-setup.md) · [Build plan](docs/build-plan.md)
 
 ![Actual Rollback ROM: flying through the scrolling world and reversing direction](docs/images/scrolling.gif)
 
-**Current release: v0.2.0 scrolling prototype.** Explore worlds ten screens wide with a camera that follows before you reach the edge. Twelve playable drills exercise the Episode 1 systems, from rescue and sabotage to a three-phase boss. These are temporary scenarios; the authored Episode 1 campaign, dialogue, and story events are still to come. Episodes 2–4 are deferred.
+**Current release: v0.3.0 world prototype.** Explore a 1,600 × 1,440 world—ten times the original width and height—with a camera that follows before you reach any edge. Twelve playable drills exercise the Episode 1 systems, from rescue and sabotage to a three-phase boss. These are temporary scenarios; the authored Episode 1 campaign, dialogue, and story events are still to come. Episodes 2–4 are deferred.
 
 ## Play
 
-Download and unzip the [release bundle](https://github.com/Zollicoff/Rollback/releases/tag/v0.2.0-scrolling). Open `rollback-e1-training.gbc` in a Game Boy Color emulator, such as [SameBoy](https://sameboy.github.io/), or follow the [Chromatic cartridge instructions](docs/mac-cartridge-setup.md). The included `.rom` contains identical bytes. The ZIP also includes a quick-start guide, checksums, screenshots, and the verification report.
+Download and unzip the [release bundle](https://github.com/Zollicoff/Rollback/releases/tag/v0.3.0-world). Open `rollback-e1-training.gbc` in a Game Boy Color emulator, such as [SameBoy](https://sameboy.github.io/), or follow the [Chromatic cartridge instructions](docs/mac-cartridge-setup.md). The included `.rom` contains identical bytes. The ZIP also includes a quick-start guide, checksums, screenshots, and the verification report.
 
 | Control | Action |
 | --- | --- |
@@ -42,7 +42,7 @@ Tools live in ignored `.tools/`; generated output lives in ignored `build/` and 
 
 ## What is implemented
 
-- Ten-screen worlds (1,600 pixels wide), streamed scenery, a camera with 56-pixel side margins, fixed HUD, sector numbers, and direction arrows for distant objectives. Rescue pods, relays, convoy routes, navigation gates, and the boss use world positions.
+- Large worlds (1,600 × 1,440 pixels), terrain streaming in both directions, a camera with horizontal and vertical padding, a fixed bottom HUD, grid coordinates, and direction indicators for distant objectives. Rescue pods, relays, convoy routes, navigation gates, and the boss use world positions.
 - Eight-direction flight, aim locking, boost, projectile collisions, cover, enemy drones, hull damage, repair pickups, and synthesized music/SFX.
 - Defense, raid, escort, chase, survival, rescue, evade, sabotage, and a three-phase boss.
 - Briefing, mission, debrief, replay selection, pause, failure, checkpoint restoration, and a Timeline Damage result.
@@ -52,7 +52,7 @@ Tools live in ignored `.tools/`; generated output lives in ignored `build/` and 
 
 ## Verification
 
-`make test` boots the actual ROM in PyBoy 2.7.0, uses buttons to interact with it, and observes its LCD, audio, and sprites. It does not modify game RAM or inject mission victories. It checks ROM checksums, audio/mute, movement/fire/pause, invalid and fresh-boot resume codes, checkpoint recovery after death, and completion of all twelve training scenarios. Scrolling checks cover travel through all ten sectors and back, camera margins and reversals, fixed HUD bands, distant-object clipping, world boundaries, and restoration of a distant checkpoint. The release includes the result report and screenshots.
+`make test` boots the actual ROM in PyBoy 2.7.0, uses buttons to interact with it, and observes its LCD, audio, and sprites. It does not modify game RAM or inject mission victories. It checks ROM checksums, audio/mute, movement/fire/pause, invalid and fresh-boot resume codes, checkpoint recovery after death, and completion of all twelve training scenarios. Scrolling checks cover travel to all four world corners and back, both camera axes and reversals, fixed HUD pixels, distant-object clipping, all boundaries, diagonal panning, and restoration of a distant checkpoint. The release includes the result report and screenshots.
 
 Physical cartridge boot, controls, audio, and power-cycle testing are outstanding. Canonical narrative integration, authored Episode 1 layouts, character-specific portraits/barks, and final balancing are also outstanding. Episodes 2–4 are deferred.
 

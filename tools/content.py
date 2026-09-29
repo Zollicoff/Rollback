@@ -23,7 +23,7 @@ for m in missions:
             if len(textwrap.wrap(value, 18)) > 11:
                 raise ValueError(f'{key} exceeds dialog page: {m["title"]}')
         fields.append(json.dumps(value))
-    if m['type'] not in modes or m['layout'] not in range(3) or not 1 <= m['seconds'] <= 240:
+    if m['type'] not in modes or m['layout'] not in range(3) or not 1 <= m['seconds'] <= 600:
         raise ValueError(f'Invalid mission parameters: {m["title"]}')
     fields += [m['type']] + [str(m[k]) for k in ['layout', 'seconds', 'goal', 'difficulty']]
     out.append('    {' + ', '.join(fields) + '},')
