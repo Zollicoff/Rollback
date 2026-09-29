@@ -144,15 +144,34 @@ def run_all(rom):
             if not pilot.step():
                 c.hold([],30)
                 if 'TIMELINE BROKEN' in c.text() and recoveries<3:
-                    c.tap('a',after=50);recoveries+=1
+                    c.tap('start',after=50);recoveries+=1
                     continue
                 if c.line(0).startswith('HP'):continue
                 break
         c.hold([],20)
         status='PASS' if 'SORTIE COMPLETE' in c.text() else 'FAIL'
+        result_screen=c.text()
         c.screenshot(f'drill-{index+1:02}-{status.lower()}')
         mulligans=int(c.line(10)[14:17]) if c.line(10).startswith(' MULLIGANS') else None
-        result={'drill':index+1,'mode':mode,'status':status,'frames':pilot.frames,'mulligans':mulligans,'explicit_checkpoint_recoveries':recoveries,'checkpoint_seen':pilot.checkpoint_seen,'screen':c.text()}
+        if status=='PASS':
+            for _ in range(8): c.tap('a')
+            assert 'TIMELINE DAMAGE' in c.text(), 'Firing skipped mission results'
+            c.tap('b')
+            assert 'TIMELINE DAMAGE' in c.text(), 'Boost skipped mission results'
+            c.hold(['start'],60)
+            assert 'START CONTINUE' in c.text(), 'Held Start skipped the debrief'
+            for _ in range(8): c.tap('a')
+            assert 'START CONTINUE' in c.text(), 'Firing skipped the debrief'
+            c.screenshot(f'drill-{index+1:02}-debrief')
+            c.tap('start')
+            expected='TRAINING COMPLETE' if index==11 else 'SIMULATION BRIEF'
+            assert expected in c.text(), 'Fresh Start did not continue'
+            if index==11:
+                for _ in range(8): c.tap('a')
+                assert 'TRAINING COMPLETE' in c.text(), 'Firing skipped final completion'
+                c.tap('start')
+                assert 'FLIGHT SIMULATOR' in c.text()
+        result={'drill':index+1,'mode':mode,'status':status,'frames':pilot.frames,'mulligans':mulligans,'explicit_checkpoint_recoveries':recoveries,'checkpoint_seen':pilot.checkpoint_seen,'screen':result_screen}
         results.append(result)
         print(f'Drill {index+1:02} {mode}: {status} after {pilot.frames} frames; mulligans={mulligans}',flush=True)
         if status=='FAIL':print(c.text(),flush=True)

@@ -12,6 +12,7 @@ import numpy as np
 from rom_harness import Console
 from playthrough import Pilot,run_all
 from verify_scrolling import verify_scrolling
+from verify_waypoints import verify_waypoints
 
 rom=sys.argv[1] if len(sys.argv)>1 else 'build/rollback-e1-training.gbc'
 data=Path(rom).read_bytes()
@@ -80,7 +81,9 @@ for _ in range(3600):
     if 'TIMELINE BROKEN' in c.text():break
 assert 'TIMELINE BROKEN' in c.text(),'Expected hostile fire to exhaust hull after midpoint'
 c.screenshot('failure')
-c.tap('a',after=50)
+for _ in range(8): c.tap('a')
+assert 'TIMELINE BROKEN' in c.text(), 'Firing skipped the failure screen'
+c.tap('start',after=50)
 assert c.line(0).startswith('HP'),'Mulligan did not return to gameplay'
 assert int(c.line(0)[16:19])>=checkpoint_seconds-1,'Rewind failed to restore the earlier mission clock'
 assert int(c.line(0)[16:19])<initial_seconds-5,'Rewind restarted the mission instead of its midpoint checkpoint'
@@ -96,9 +99,10 @@ c.close()
 
 scrolling=verify_scrolling(rom)
 checks.extend(scrolling['checks'])
+checks.extend(verify_waypoints(rom))
 results=run_all(rom)
 assert all(r['status']=='PASS' for r in results),'At least one scenario did not complete through player inputs'
-checks.append('all 12 training scenarios across all 9 objective types')
+checks.append('all 12 training scenarios across all 9 objective types; A mash and held-Start end-screen protection')
 report={'rom':str(rom),'sha256':hashlib.sha256(data).hexdigest(),'bytes':len(data),
         'emulator':'PyBoy 2.7.0; CGB mode; button input only; no game RAM writes',
         'checks':checks,'scrolling':scrolling,'scenarios':results,'hardware_tested':False,'canonical_episode_1_story_integrated':False}

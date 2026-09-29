@@ -30,7 +30,7 @@ void main(void) {
         held=joypad(); pressed=held & ~previous; previous=held;
         old_screen=screen; changed=0;
         audio_tick();
-        if(pressed&J_SELECT) audio_toggle();
+        if((pressed&J_SELECT) && screen!=FALLEN) audio_toggle();
         switch(screen) {
             case TITLE:
                 if(pressed&J_UP) { title_choice=(title_choice+2)%3; changed=1; }
@@ -66,17 +66,16 @@ void main(void) {
                 }
                 break;
             case FALLEN:
-                if(pressed&J_A) game_rewind();
+                if(pressed&J_START) game_rewind();
                 else if(pressed&J_B) game_start();
-                else if(pressed&J_START) screen=SELECT_MISSION;
+                else if(pressed&J_SELECT) screen=SELECT_MISSION;
                 break;
             case DEBRIEF:
-                if(pressed&J_A) {
+                if(pressed&J_START) {
                     if(!brief_page) { brief_page=1; changed=1; }
                     else if(mission_index==MISSION_COUNT-1) screen=COMPLETE;
                     else { mission_index++; brief_page=0; screen=BRIEFING; }
                 }
-                if(pressed&J_B) screen=SELECT_MISSION;
                 break;
             case MANUAL:
                 if(pressed&(J_A|J_B|J_START)) screen=TITLE;
@@ -95,7 +94,7 @@ void main(void) {
                 if(pressed&J_B) screen=TITLE;
                 break;
             case COMPLETE:
-                if(pressed&(J_A|J_START)) screen=SELECT_MISSION;
+                if(pressed&J_START) screen=SELECT_MISSION;
                 break;
         }
         if(old_screen!=screen || changed) { redraw(); audio_sfx(S_CONFIRM); last_frame=sys_time; }

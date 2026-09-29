@@ -89,7 +89,7 @@ static void portrait(uint8_t x,uint8_t y) {
 }
 void video_init(void) {
     DISPLAY_OFF;
-    VBK_REG=0; set_bkg_data(0,176,background_tiles); set_sprite_data(0,74,sprite_tiles);
+    VBK_REG=0; set_bkg_data(0,176,background_tiles); set_sprite_data(0,90,sprite_tiles);
     set_bkg_palette(0,8,bg_palettes); set_sprite_palette(0,8,sprite_palettes);
     BGP_REG=0xe4; OBP0_REG=0xe4; OBP1_REG=0xe4;
     SPRITES_8x16; HIDE_WIN; SHOW_BKG; SHOW_SPRITES;
@@ -127,7 +127,7 @@ void draw_title(uint8_t choice) {
     text_at(3,13,"RESUME CODE",choice==1?3:0);
     text_at(3,15,"FIELD MANUAL",choice==2?3:0);
     text_at(1,11+choice*2,">",3);
-    text_at(2,17,"A SELECT  V0.3.0",6);
+    text_at(2,17,"A SELECT  V0.3.1",6);
     page_end();
 }
 void draw_selection(void) {
@@ -219,6 +219,43 @@ static void bullet(uint8_t slot,int16_t x,int16_t y,uint8_t first,uint8_t palett
     set_sprite_tile(slot,first); set_sprite_prop(slot,palette);
     move_sprite(slot,(uint8_t)x+4,(uint8_t)y+8);
 }
+// Eight-way arrows point from the ship toward a target. Clamp their position
+// inside the playfield; the fixed HUD starts at scanline 112.
+static void waypoint(uint8_t slot,int16_t x,int16_t y,uint8_t palette) {
+    int16_t dx=x-game.x,dy=y-game.y,sx,sy;
+    uint16_t ax=dx<0?-dx:dx,ay=dy<0?-dy:dy;
+    uint8_t dir;
+    if(ax<12 && ay<12) return;
+    if(ax>ay*2u) dir=dx>0?2:6;
+    else if(ay>ax*2u) dir=dy>0?4:0;
+    else dir=dy>0?(dx>0?3:5):(dx>0?1:7);
+    sx=x-game.camera_x; sy=y-game.camera_y-14;
+    if(sx<8) sx=8; if(sx>152) sx=152;
+    if(sy<8) sy=8; if(sy>100) sy=100;
+    // Separate a threat arrow from an objective at the same screen edge.
+    if(slot==39) { if(sx>140) sx-=10; else sx+=10; }
+    set_sprite_tile(slot,74+dir*2); set_sprite_prop(slot,palette);
+    move_sprite(slot,(uint8_t)sx+4,(uint8_t)sy+12);
+}
+static void draw_waypoints(void) {
+    uint8_t i,type=missions[mission_index].type,nearest=255;
+    uint16_t best=65535,d;
+    int16_t x,y,dx,dy;
+    if(type!=SURVIVAL) {
+        game_target(&x,&y);
+        waypoint(38,x,y,(type==DEFENSE || type==ESCORT)?3:
+            (type==RAID || type==BOSS || type==CHASE)?1:type==SABOTAGE?2:6);
+    }
+    // Always identify the closest living threat, including during protection
+    // and rescue missions. Boss/chase already identify their primary enemy.
+    if(type==BOSS || type==CHASE) return;
+    for(i=0;i<ENEMY_COUNT;i++) if(game.enemies[i].hp) {
+        dx=game.enemies[i].x-game.x; dy=game.enemies[i].y-game.y;
+        d=(dx<0?-dx:dx)+(dy<0?-dy:dy);
+        if(d<best) { best=d; nearest=i; }
+    }
+    if(nearest!=255) waypoint(39,game.enemies[nearest].x,game.enemies[nearest].y,1);
+}
 void draw_game(void) {
     uint8_t i,type=missions[mission_index].type,progress=game.progress,goal=missions[mission_index].goal;
     uint8_t channel_display=(type==RESCUE && game.progress>=3)?2:(game.channel!=0);
@@ -238,7 +275,8 @@ void draw_game(void) {
         ship(14+i*2,game.objects[i].x,game.objects[i].y,object_tile[game.objects[i].kind],object_palette[game.objects[i].kind]);
     for(i=0;i<SHOT_COUNT;i++) if(game.shots[i].active) bullet(22+i,game.shots[i].x,game.shots[i].y,60,6);
     for(i=0;i<HOSTILE_COUNT;i++) if(game.hostile[i].active) bullet(30+i,game.hostile[i].x,game.hostile[i].y,62,1);
-    for(i=0;i<EFFECT_COUNT;i++) if(game.effects[i].life) bullet(36+i,game.effects[i].x,game.effects[i].y,68,5);
+    for(i=0;i<EFFECT_COUNT-2;i++) if(game.effects[i].life) bullet(36+i,game.effects[i].x,game.effects[i].y,68,5);
+    draw_waypoints();
     const char *message;
     if(hud_hull!=game.hull) {
         text_at(0,0,"HP",6);
@@ -301,9 +339,9 @@ void draw_pause(uint8_t choice) {
 void draw_fallen(void) {
     page_begin(); frame(0,0,20,18,4);
     text_at(2,2,"TIMELINE BROKEN",4); text_at(1,5,failure_reason,0);
-    text_at(1,8,"A TAKE A MULLIGAN",7);
+    text_at(1,8,"START TO REWIND",7);
     text_at(1,10,"RESTORE CHECKPOINT",6);
-    text_at(1,13,"B RESTART SORTIE",0); text_at(1,15,"START DRILL MENU",6); page_end();
+    text_at(1,13,"B RESTART SORTIE",0); text_at(1,15,"SELECT DRILL MENU",6); page_end();
 }
 void draw_debrief(void) {
     page_begin(); frame(0,0,20,18,7);
@@ -314,19 +352,23 @@ void draw_debrief(void) {
         text_at(1,8,"SCORE",6); number_at(12,8,game.score,5,0);
         text_at(1,10,"MULLIGANS",6); number_at(14,10,rewinds,3,0);
         text_at(1,12,"RESUME CODE",6); number_at(13,12,progress_code(unlocked),4,3);
-        text_at(1,15,"A DEBRIEF",7);
+        text_at(1,15,"START DEBRIEF",7);
     } else {
         wrapped(1,3,missions[mission_index].debrief,18,11,0);
-        text_at(1,15,"A CONTINUE",7);
+        text_at(1,15,"START CONTINUE",7);
     }
-    text_at(1,16,"B DRILL MENU",6); page_end();
+    page_end();
 }
 void draw_manual(void) {
     page_begin(); text_at(3,1,"FIELD MANUAL",7);
-    text_at(1,3,"D PAD   FLY / AIM",0); text_at(1,5,"A       FIRE",0);
-    text_at(1,7,"HOLD A  LOCK AIM",0); text_at(1,9,"B       BOOST",0);
-    text_at(1,11,"START   PAUSE",0); text_at(1,13,"SELECT  SOUND",0);
-    text_at(1,15,"CODES KEEP PROGRESS",6); text_at(1,17,"A / B BACK",3); page_end();
+    text_at(1,3,"D PAD FLY / AIM",0); text_at(1,4,"A FIRE / HOLD AIM",0);
+    text_at(1,5,"B BOOST",0); text_at(1,6,"START PAUSE",0);
+    text_at(1,7,"SELECT SOUND",0);
+    text_at(1,9,"ARROWS",7);
+    text_at(1,10,"RED    ENEMY",4); text_at(1,11,"GREEN  PROTECT",5);
+    text_at(1,12,"CYAN   RESCUE / GO",7); text_at(1,13,"AMBER  SABOTAGE",3);
+    text_at(1,15,"START AFTER SORTIE",0);
+    text_at(1,17,"A / B BACK",3); page_end();
 }
 void draw_password(const uint8_t *digits,uint8_t cursor,uint8_t invalid) {
     uint8_t i; page_begin(); frame(0,0,20,18,6);
@@ -343,5 +385,5 @@ void draw_complete(void) {
     text_at(2,9,"12 DRILLS CLEARED",0);
     text_at(1,11,"FORT KESTREL / 2131",6);
     text_at(2,13,"RESUME CODE",6); number_at(14,13,progress_code(unlocked),4,3);
-    text_at(2,16,"A REPLAY DRILLS",7); page_end();
+    text_at(2,16,"START REPLAY",7); page_end();
 }

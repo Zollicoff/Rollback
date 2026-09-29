@@ -145,6 +145,12 @@ d.line((0,2,7,9),fill=2);d.line((7,2,0,9),fill=2);d.rectangle((2,4,5,7),fill=3);
 im=blank(16,16);d=ImageDraw.Draw(im)
 d.rectangle((1,1,14,14),outline=2);d.line((4,8,7,11,12,4),fill=3);sprite(im)
 assert len(sprites)==74
+arrow=blank(); d=ImageDraw.Draw(arrow)
+d.polygon([(3,0),(7,4),(5,4),(5,7),(2,7),(2,4),(0,4)],fill=1)
+d.polygon([(3,1),(6,4),(4,4),(4,6),(3,6),(3,4),(1,4)],fill=2)
+for angle in range(0,360,45):
+    sprites.extend([arrow.rotate(-angle,resample=Image.Resampling.NEAREST),blank()])
+assert len(sprites)==90
 def c_array(name,tiles):
     raw=sum((encode(t) for t in tiles),[])
     return 'const unsigned char '+name+'[] = {\n'+ '\n'.join('    '+','.join(f'0x{v:02x}' for v in raw[i:i+16])+',' for i in range(0,len(raw),16))+'\n};\n'
@@ -155,4 +161,4 @@ for i,t in enumerate(bg[:128]):
     out=Image.new('RGB',(8,8));out.putdata([palette[p] for p in t.getdata()]);sheet.paste(out,((i%16)*8,(i//16)*8))
 Path('assets').mkdir(exist_ok=True)
 sheet.save('build/tile-sheet.png')
-print('Generated original font, scenery, portrait and 74 sprite tiles')
+print('Generated original font, scenery, portrait and 90 sprite tiles')

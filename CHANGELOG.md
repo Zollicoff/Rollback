@@ -1,5 +1,12 @@
 # Changes
 
+## 0.3.1-waypoints — local build
+
+- Add eight-direction objective and nearest-enemy arrows, clamped inside the playfield and colored by purpose.
+- Require fresh Start presses for results, debriefs, completion, and checkpoint recovery; A no longer skips end screens.
+- Reserve two sprite slots for navigation and display at most two concurrent impact effects.
+- Add a color legend to the field manual.
+
 ## 0.3.0-world — September 29, 2026
 
 - Expand the vertical dimension too: worlds are now 1,600 × 1,440 pixels, ten times the original width and height.

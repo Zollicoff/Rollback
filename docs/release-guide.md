@@ -1,4 +1,4 @@
-# Playing Rollback v0.3.0 on your Mac
+# Playing Rollback v0.3.1 on your Mac
 
 This is a playable **training prototype** for the Episode 1 systems. Its twelve drills are temporary gameplay scenarios. The completed Episode 1 story has not yet been supplied for integration.
 
@@ -10,7 +10,7 @@ This is a playable **training prototype** for the Episode 1 systems. Its twelve 
 
 D-pad flies and aims; A fires; holding A locks your aim while you move. Release A before changing firing direction. B boosts, except when held beside a sabotage relay. Start pauses. Select toggles sound.
 
-Boost takes a short time to recharge; the HUD shows `B OK` when it is ready. Green repair cells restore two hull points. On death, A restores the current checkpoint, B restarts the whole sortie, and Start returns to drill selection. The pause menu’s Take a Mulligan restarts the whole sortie.
+Boost takes a short time to recharge; the HUD shows `B OK` when it is ready. Green repair cells restore two hull points. On death, Start restores the current checkpoint, B restarts the whole sortie, and Select returns to drill selection. The pause menu’s Take a Mulligan restarts the whole sortie.
 
 ## Exploring the world
 
@@ -42,3 +42,9 @@ Once the cart is confirmed and you intend to overwrite it, use `chromatic-cli wr
 ## Included verification
 
 The report in `verification.json` corresponds to this exact ROM hash. All twelve drills have been completed in the emulator using controller input. Checkpoint restoration, pause timing, audio/mute, passwords, and both cartridge checksums were also checked. This establishes emulator behavior; hardware confirmation is still needed.
+
+## Waypoints and mission results
+
+Red arrows mark enemies and attack targets; green marks protection targets; cyan marks rescue/navigation; amber marks sabotage. Up to two arrows show the primary objective and closest living enemy.
+
+Press Start to advance mission results, debriefs, and final completion. A and B cannot dismiss victory screens. Start restores the checkpoint on failure; B restarts and Select returns to the drill menu.

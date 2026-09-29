@@ -20,7 +20,11 @@ Download and unzip the [release bundle](https://github.com/Zollicoff/Rollback/re
 | Start | Pause; restart the sortie with Take a Mulligan |
 | Select | Toggle sound |
 
-On death, A restores the latest in-game checkpoint; B restarts the sortie. Completed drills unlock the next drill. Record the four-digit resume code to recover progress after switching off. This build does not require cartridge save RAM.
+On death, Start restores the latest in-game checkpoint; B restarts the sortie. Select returns to the drill menu from the failure screen. Mission results, debriefs, and final completion require a fresh Start press; firing with A cannot dismiss them.
+
+Waypoint arrows point to nearby and offscreen targets: red for enemies/attack targets, green for protection, cyan for rescue/navigation (including the return home), and amber for sabotage. The primary objective and nearest living enemy each have an arrow; arrows disappear when their target is reached or no longer active.
+
+Completed drills unlock the next drill. Record the four-digit resume code to recover progress after switching off. This build does not require cartridge save RAM.
 
 See [Mac setup](docs/mac-cartridge-setup.md) and [release instructions](docs/release-guide.md). The ROM is CGB-only, 64 KiB, MBC5 (`0x19`), with no external RAM. Its compatibility with the physical DevDay cartridge still requires detection and a hardware test.
 
