@@ -1,0 +1,137 @@
+{
+  "status": "non-canonical training scenarios; not Episode 1 story missions",
+  "missions": [
+    {
+      "title": "BREAKWATER",
+      "type": "DEFENSE",
+      "layout": 1,
+      "seconds": 90,
+      "goal": 8,
+      "difficulty": 0,
+      "brief": "Protect the beacon. Intercept eight drones before they destroy it. Hold A to fire; release A to turn.",
+      "hint": "PROTECT THE BEACON",
+      "debrief": "Defense drill complete. The beacon is secure. Record your resume code."
+    },
+    {
+      "title": "DEAD CIRCUIT",
+      "type": "RAID",
+      "layout": 0,
+      "seconds": 80,
+      "goal": 3,
+      "difficulty": 0,
+      "brief": "Destroy three relay towers. Their amber cores take four hits. Keep moving between attack runs.",
+      "hint": "DESTROY 3 RELAYS",
+      "debrief": "All relay targets disabled. Attack runs logged."
+    },
+    {
+      "title": "LIFELINE",
+      "type": "RESCUE",
+      "layout": 0,
+      "seconds": 75,
+      "goal": 3,
+      "difficulty": 0,
+      "brief": "Reach the three green rescue pods, then return to the landing pad at the bottom of the arena.",
+      "hint": "COLLECT 3 THEN HOME",
+      "debrief": "Rescue drill complete. All three pods recovered."
+    },
+    {
+      "title": "SAFE PASSAGE",
+      "type": "ESCORT",
+      "layout": 2,
+      "seconds": 90,
+      "goal": 4,
+      "difficulty": 0,
+      "brief": "Protect the blue transport as it follows its route. Clear nearby drones. Its hull cannot be repaired.",
+      "hint": "GUARD THE TRANSPORT",
+      "debrief": "Transport reached the end of its route. Escort logged."
+    },
+    {
+      "title": "HIGH WATER",
+      "type": "SURVIVAL",
+      "layout": 0,
+      "seconds": 35,
+      "goal": 35,
+      "difficulty": 1,
+      "brief": "Survive for 35 seconds. B boosts through danger. Collect green repair cells dropped by drones.",
+      "hint": "SURVIVE THE TIMER",
+      "debrief": "Endurance drill complete. Flight telemetry recorded."
+    },
+    {
+      "title": "BLACKOUT",
+      "type": "SABOTAGE",
+      "layout": 2,
+      "seconds": 90,
+      "goal": 3,
+      "difficulty": 1,
+      "brief": "Approach each relay and hold B to disable it. Stay close until the channel completes. Weapons cannot damage these relays.",
+      "hint": "HOLD B NEAR RELAY",
+      "debrief": "Three relays shut down. Sabotage drill complete."
+    },
+    {
+      "title": "INTERCEPT",
+      "type": "CHASE",
+      "layout": 1,
+      "seconds": 65,
+      "goal": 1,
+      "difficulty": 1,
+      "brief": "Intercept the marked heavy drone before time expires. Hold A to lock your firing direction while you move.",
+      "hint": "STOP THE MARKED SHIP",
+      "debrief": "Target intercepted before the time limit."
+    },
+    {
+      "title": "SECOND WATCH",
+      "type": "DEFENSE",
+      "layout": 2,
+      "seconds": 95,
+      "goal": 12,
+      "difficulty": 1,
+      "brief": "Defend the beacon against twelve drones. Midpoint checkpoints preserve the fight, your hull and the objective.",
+      "hint": "PROTECT THE BEACON",
+      "debrief": "Second defense drill complete. Beacon telemetry saved."
+    },
+    {
+      "title": "SLIPSTREAM",
+      "type": "EVADE",
+      "layout": 1,
+      "seconds": 45,
+      "goal": 4,
+      "difficulty": 1,
+      "brief": "Touch four navigation gates in sequence. The next gate glows green. Boost past pursuers and stay in bounds.",
+      "hint": "REACH THE GREEN GATE",
+      "debrief": "All four gates passed. Evasion drill complete."
+    },
+    {
+      "title": "FAULT LINE",
+      "type": "RAID",
+      "layout": 1,
+      "seconds": 80,
+      "goal": 3,
+      "difficulty": 2,
+      "brief": "Destroy three hardened relay targets while drones defend them. Use the seawall structures as cover.",
+      "hint": "DESTROY 3 RELAYS",
+      "debrief": "Hardened targets disabled. Strike drill complete."
+    },
+    {
+      "title": "LAST LIGHT",
+      "type": "SURVIVAL",
+      "layout": 2,
+      "seconds": 45,
+      "goal": 45,
+      "difficulty": 2,
+      "brief": "Hold the hangar for 45 seconds. Alternate fire and boost. Repairs restore two hull points, up to six.",
+      "hint": "HOLD FOR 45 SECONDS",
+      "debrief": "Hangar endurance test complete. Final drill unlocked."
+    },
+    {
+      "title": "HEAVY WEATHER",
+      "type": "BOSS",
+      "layout": 0,
+      "seconds": 120,
+      "goal": 1,
+      "difficulty": 2,
+      "brief": "Defeat the heavy combat drone. Its attack pattern changes as its hull falls. Boost through the gaps.",
+      "hint": "DEFEAT HEAVY DRONE",
+      "debrief": "Heavy drone defeated. All twelve training drills are complete. Episode 1 story integration follows."
+    }
+  ]
+}

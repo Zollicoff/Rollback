@@ -1,0 +1,7 @@
+.tools/
+build/
+dist/
+__pycache__/
+*.ram
+*.rtc
+.DS_Store

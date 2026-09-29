@@ -1,0 +1,2 @@
+# Preserve the verbatim upstream license, including its original whitespace.
+LICENSES/GBDK_LIBRARY.txt -whitespace
