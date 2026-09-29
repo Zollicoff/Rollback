@@ -18,10 +18,11 @@ def path_direction(console,target):
     px,py=console.player()
     def clear(p):
         x,y=p
-        return all((console.emu.tilemap_background[(x+dx)//8,(y+dy)//8]&255) not in (100,101,102,103) for dx,dy in [(-4,-4),(4,4)])
-    if not hasattr(console,'nav_nodes'):
-        console.nav_nodes={(x,y) for x in range(16,145,8) for y in range(32,113,8) if clear((x,y))}
-    nodes=console.nav_nodes
+        if x<12 or x>1587 or y<28 or y>115:return False
+        return all((console.emu.tilemap_background[((x+dx)//8)&31,(y+dy)//8]&255) not in (100,101,102,103) for dx,dy in [(-4,-4),(4,4)])
+    camera=console.camera()
+    # Plan inside the actual visible terrain; discovery advances with the camera.
+    nodes={(x,y) for x in range(((camera+8)//8)*8,((camera+152)//8)*8,8) for y in range(32,113,8) if clear((x,y))}
     start=min(nodes,key=lambda p:abs(p[0]-px)+abs(p[1]-py))
     goal=min(nodes,key=lambda p:abs(p[0]-target[0])+abs(p[1]-target[1]))
     queue=deque([start]);parent={start:None}
@@ -44,9 +45,11 @@ class Pilot:
 
     def step(self):
         c=self.c
-        if not c.line(0).startswith('HP'):
-            c.hold([],12)
-            if not c.line(0).startswith('HP'):return False
+        for _ in range(20):
+            if c.line(0).startswith('HP'):break
+            if 'SORTIE COMPLETE' in c.text() or 'TIMELINE BROKEN' in c.text():return False
+            c.hold([],6)  # Let a full arena/menu redraw finish with neutral input.
+        if not c.line(0).startswith('HP'):return False
         px,py=c.player()
         enemies=[s for i in range(6) if (s:=c.sprite(2+2*i))]
         objects=[s for i in range(4) if (s:=c.sprite(14+2*i))]
@@ -58,22 +61,39 @@ class Pilot:
             if self.mode=='SABOTAGE' and target:
                 channel=abs(px-target[0])<16 and abs(py-target[1])<16
                 navigation=target[:2]
+                threat=closest(enemies)
+                if threat and abs(px-threat[0])+abs(py-threat[1])<64:
+                    target=threat;channel=False
+            if not towers and self.mode=='SABOTAGE':
+                target=closest(enemies)
+                arrow=c.line(16)[11:12]
+                navigation=(px+(-112 if arrow=='<' else 112),80)
         elif self.mode=='RESCUE':
             pods=[s for s in objects if s[2]==48]
-            pod=closest(pods);navigation=pod[:2] if pod else (80,112)
+            pod=closest(pods)
+            navigation=pod[:2] if pod else ((80,112) if 'HOME' in c.line(16) else None)
         elif self.mode=='EVADE':
-            gate=closest([s for s in objects if s[2]==70]);navigation=gate[:2] if gate else (80,112)
+            gate=closest([s for s in objects if s[2]==70]);navigation=gate[:2] if gate else None
         elif self.mode=='SURVIVAL':
-            route=[(80,32),(136,80),(80,112),(24,80)]
+            route=[(80,80),(720,80),(1440,80),(720,112)]
             navigation=route[self.route]
             if abs(px-navigation[0])+abs(py-navigation[1])<14:self.route=(self.route+1)%4
         elif self.mode in ('BOSS','CHASE'):
             target=closest([s for s in enemies if s[2]==56])
-            if target:navigation=(min(104,max(56,target[0])),112 if self.mode=='CHASE' else 80)
+            if target:navigation=(target[0],112 if self.mode=='CHASE' else 80)
+        elif self.mode=='ESCORT':
+            transport=closest([s for s in objects if s[2]==52])
+            if transport:navigation=(transport[0]+16,transport[1]+24)
         repair=closest([s for s in objects if s[2]==64])
         # Repairs are useful even at full hull and provide a natural evasive route.
         if repair and self.mode in ('DEFENSE','CHASE','BOSS') and abs(px-repair[0])+abs(py-repair[1])<60:navigation=repair[:2]
         if target and navigation is None and abs(px-target[0])+abs(py-target[1])>28:navigation=target[:2]
+        if navigation is None and (not target or self.mode in ('RESCUE','EVADE')):
+            arrow=c.line(16)[11:12]
+            if arrow in '<>':navigation=(px+(112 if arrow=='>' else -112),80)
+        # Keep searching for distant mission objects even when a local drone is visible.
+        if self.mode in ('RESCUE','EVADE') and navigation is None:
+            navigation=(px+112,80)
         move=path_direction(c,navigation) if navigation else []
         if channel:
             c.hold(['b'],8)
@@ -102,7 +122,7 @@ def run_all(rom):
         for _ in range(11-index):c.tap('left',after=3)
         c.launch();c.hold([],65)
         pilot=Pilot(c,mode)
-        for _ in range(1400):
+        for _ in range(2400):
             if not pilot.step():break
         c.hold([],20)
         status='PASS' if 'SORTIE COMPLETE' in c.text() else 'FAIL'

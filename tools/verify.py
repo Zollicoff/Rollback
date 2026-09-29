@@ -11,6 +11,7 @@ from pathlib import Path
 import numpy as np
 from rom_harness import Console
 from playthrough import Pilot,run_all
+from verify_scrolling import verify_scrolling
 
 rom=sys.argv[1] if len(sys.argv)>1 else 'build/rollback-e1-training.gbc'
 data=Path(rom).read_bytes()
@@ -59,35 +60,44 @@ c.close()
 # A newly booted console restores a password, without relying on emulator RAM.
 c=Console(rom);c.resume(1690)
 assert '05' in c.line(3) and 'HIGH WATER' in c.text(),'Fresh boot did not restore drill 5'
+for _ in range(3):c.tap('left')
 c.launch();c.hold([],65)
-pilot=Pilot(c,'SURVIVAL')
-for _ in range(400):
+initial_seconds=int(c.line(0)[16:19])
+pilot=Pilot(c,'RAID')
+for _ in range(1400):
     if not pilot.step():break
     if pilot.checkpoint_seen:break
-assert pilot.checkpoint_seen,'Survival did not produce its midpoint checkpoint'
+assert pilot.checkpoint_seen,'Raid did not produce its midpoint checkpoint'
 checkpoint_seconds=pilot.checkpoint_time
+checkpoint_camera=c.camera();checkpoint_player=c.player();checkpoint_progress=c.line(1)[14:19]
+assert checkpoint_camera>256,'Checkpoint did not exercise a distant world location'
 c.screenshot('checkpoint')
 # Observe failure with no controls, then invoke the ROM's own rewind command.
 c.hold([],1)
-for _ in range(900):
+for _ in range(3600):
     c.tick()
     if 'TIMELINE BROKEN' in c.text():break
 assert 'TIMELINE BROKEN' in c.text(),'Expected hostile fire to exhaust hull after midpoint'
 c.screenshot('failure')
-c.tap('a',after=20)
+c.tap('a',after=50)
 assert c.line(0).startswith('HP'),'Mulligan did not return to gameplay'
 assert int(c.line(0)[16:19])>=checkpoint_seconds-1,'Rewind failed to restore the earlier mission clock'
-assert int(c.line(0)[16:19])<30,'Rewind restarted the mission instead of its midpoint checkpoint'
+assert int(c.line(0)[16:19])<initial_seconds-5,'Rewind restarted the mission instead of its midpoint checkpoint'
+assert abs(c.camera()-checkpoint_camera)<=8,'Rewind lost the world camera'
+assert abs(c.player()[0]-checkpoint_player[0])<=12,'Rewind lost the world position'
+assert c.line(1)[14:19]==checkpoint_progress,'Rewind lost the completed objectives'
 assert 'TIMELINE RESTORED' in c.text()
 c.screenshot('rewind')
-checks.append('fresh-boot resume, midpoint checkpoint, death and game-owned rewind')
+checks.append('fresh-boot resume, distant midpoint checkpoint, death and rewind of time, world position, camera and objectives')
 c.close()
 
+scrolling=verify_scrolling(rom)
+checks.extend(scrolling['checks'])
 results=run_all(rom)
 assert all(r['status']=='PASS' for r in results),'At least one scenario did not complete through player inputs'
 checks.append('all 12 training scenarios across all 9 objective types')
 report={'rom':str(rom),'sha256':hashlib.sha256(data).hexdigest(),'bytes':len(data),
         'emulator':'PyBoy 2.7.0; CGB mode; button input only; no game RAM writes',
-        'checks':checks,'scenarios':results,'hardware_tested':False,'canonical_episode_1_story_integrated':False}
+        'checks':checks,'scrolling':scrolling,'scenarios':results,'hardware_tested':False,'canonical_episode_1_story_integrated':False}
 Path('build/verification.json').write_text(json.dumps(report,indent=2)+'\n')
 print(json.dumps({k:v for k,v in report.items() if k!='scenarios'},indent=2))

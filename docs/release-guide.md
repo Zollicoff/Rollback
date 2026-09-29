@@ -1,4 +1,4 @@
-# Playing Rollback v0.1.0 on your MacBook Pro
+# Playing Rollback v0.2.0 on your Mac
 
 This is a playable **training prototype** for the Episode 1 systems. Its twelve drills are temporary gameplay scenarios. The completed Episode 1 story has not yet been supplied for integration.
 
@@ -11,6 +11,12 @@ This is a playable **training prototype** for the Episode 1 systems. Its twelve 
 D-pad flies and aims; A fires; holding A locks your aim while you move. Release A before changing firing direction. B boosts, except when held beside a sabotage relay. Start pauses. Select toggles sound.
 
 Boost takes a short time to recharge; the HUD shows `B OK` when it is ready. Green repair cells restore two hull points. On death, A restores the current checkpoint, B restarts the whole sortie, and Start returns to drill selection. The pause menu’s Take a Mulligan restarts the whole sortie.
+
+## Exploring the world
+
+Each map is now ten screens wide. Fly east or west to explore; the camera follows once you move outside the central band, leaving 56 pixels ahead before the screen edge. Reversing direction lets you move across the central band before the camera follows back. At the two ends of the world, the camera stops.
+
+The bottom-right counter shows your current sector out of ten. The arrow points toward the nearest remaining mission target; `=` means you are horizontally aligned, so look above or below. In rescue drills, `HOME` points back to the blue pad after the third pod is collected. Escort the transport across the map; the heavy boss waits near the eastern end. Death checkpoints restore your position and camera along with the mission state.
 
 ## Keeping progress
 

@@ -16,6 +16,8 @@ Updated September 29, 2026. Zach authorized implementation and narrowed the MVP 
 
 Version 0.1.0 provides twelve explicitly non-canonical training scenarios across the nine required mission types. They exercise flight, firing/aim lock, boost, collision/cover, enemy attacks, repair pickups, mission objectives, briefing/debrief, a three-phase boss, pause/restart, game-owned checkpoints, and resume passwords. Original constrained pixel art and synthesized audio are generated with the build. These scenarios establish the systems while the authored Episode 1 documents are pending; they are not substitutes for the canonical missions.
 
+Version 0.2.0 expands every world to 1,600 pixels wide. A horizontal camera follows outside a central 56–104-pixel band, with clamping at the world ends. A streamed tile map and clipped world-coordinate sprites keep the HUD fixed. Objectives span the map, the HUD shows target direction and sector, and checkpoints include the camera. All twelve enlarged drills and a full east/west traversal are exercised through emulator inputs. The public repository is [Zollicoff/Rollback](https://github.com/Zollicoff/Rollback); the canonical local project folder and memory identity remain unchanged.
+
 The built ROM declares CGB-only, MBC5, 64 KiB ROM, and zero external RAM. Its physical cartridge compatibility is still unverified. `make test` checks the actual executable in an emulator, including complete controller-input playthroughs of all twelve drills and midpoint recovery after death. The release report states its exact ROM hash.
 
 ## ROM target and toolchain

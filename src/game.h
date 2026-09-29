@@ -11,6 +11,9 @@
 #define OBJECT_COUNT 4
 #define EFFECT_COUNT 4
 #define MAX_HULL 6
+#define WORLD_WIDTH 1600
+#define CAMERA_LEFT 56
+#define CAMERA_RIGHT 104
 
 enum MissionType { DEFENSE, RAID, ESCORT, CHASE, SURVIVAL, RESCUE, EVADE, SABOTAGE, BOSS };
 enum Screen { TITLE, SELECT_MISSION, BRIEFING, PLAYING, PAUSED, FALLEN, DEBRIEF, MANUAL, PASSWORD, COMPLETE };
@@ -25,11 +28,11 @@ typedef struct {
 } Mission;
 typedef struct { int16_t x,y; int8_t dx,dy; uint8_t active,life; } Shot;
 typedef struct { int16_t x,y; uint8_t hp,kind,cool,flash; } Enemy;
-typedef struct { uint8_t x,y,hp,kind; } Objective;
-typedef struct { uint8_t x,y,life; } Effect;
+typedef struct { int16_t x,y; uint8_t hp,kind; } Objective;
+typedef struct { int16_t x,y; uint8_t life; } Effect;
 typedef struct {
     uint16_t ticks,score,rng;
-    int16_t x,y;
+    int16_t x,y,camera_x;
     uint8_t hull,face,fire,invuln,boost,boost_cool;
     int8_t move_x,move_y;
     uint8_t kills,progress,spawn_cool,spawned,checkpoint_mark;
@@ -53,6 +56,7 @@ void game_tick(uint8_t held,uint8_t pressed,uint8_t elapsed);
 void game_rewind(void);
 void game_checkpoint(void);
 uint8_t map_solid(int16_t x,int16_t y);
+int16_t game_target_x(void);
 void radio(const char *line,uint8_t priority);
 uint16_t progress_code(uint8_t count);
 uint8_t progress_decode(uint16_t code);

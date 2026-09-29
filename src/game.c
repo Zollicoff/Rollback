@@ -9,10 +9,9 @@ const char *failure_reason;
 static uint8_t radio_priority;
 static const int8_t vx[8]={0,1,1,1,0,-1,-1,-1};
 static const int8_t vy[8]={-1,-1,0,1,1,1,0,-1};
-static const uint8_t gate_x[4]={24,80,136,80};
+static const int16_t gate_x[4]={240,800,1440,1552};
 static const uint8_t gate_y[4]={80,32,80,112};
-static const uint8_t route_x[4]={80,136,24,80};
-static const uint8_t route_y[4]={32,80,80,24};
+static const int16_t route_x[4]={400,760,1120,1480};
 
 static int8_t sign(int16_t n) { return (n>0)-(n<0); }
 static uint16_t distance(int16_t n) { return n<0?-n:n; }
@@ -33,16 +32,22 @@ uint8_t progress_decode(uint16_t code) {
 }
 uint8_t map_solid(int16_t x,int16_t y) {
     uint8_t layout=missions[mission_index].layout;
-    if(x<8 || x>151 || y<24 || y>119) return 1;
-    if(layout==0) return (x>=16 && x<48 && y>=40 && y<56) || (x>=112 && x<144 && y>=96 && y<112);
-    if(layout==1) return y>=56 && y<72 && ((x>=24 && x<56)||(x>=104 && x<136));
-    return (y>=40 && y<56 || y>=96 && y<112) && (x>=16 && x<40 || x>=120 && x<144);
+    uint8_t sector,local;
+    if(x<8 || x>=WORLD_WIDTH-8 || y<24 || y>119) return 1;
+    sector=x/160; local=x%160;
+    // Different cover per sector; central and lower flight lanes stay connected.
+    if(layout==0) return (local>=16+8*(sector%3) && local<64 && y>=40 && y<56) ||
+                        (local>=104 && local<144 && y>=96 && y<104 && (sector&1));
+    if(layout==1) return (y>=48 && y<64 && local>=24 && local<64) ||
+                        (y>=96 && y<104 && local>=104 && local<136 && sector%3!=1);
+    return ((y>=40 && y<56 && local>=16 && local<48) ||
+            (y>=96 && y<104 && local>=112 && local<144)) && sector%3!=2;
 }
 void radio(const char *line,uint8_t priority) {
     if(radio_timer && priority<radio_priority) return;
     radio_line=line; radio_timer=150; radio_priority=priority;
 }
-static void effect(uint8_t x,uint8_t y) {
+static void effect(int16_t x,int16_t y) {
     uint8_t i;
     for(i=0;i<EFFECT_COUNT;i++) if(!game.effects[i].life) {
         game.effects[i].x=x; game.effects[i].y=y; game.effects[i].life=16; return;
@@ -87,8 +92,10 @@ static void spawn_enemy(void) {
     Enemy *e;
     for(i=0;i<ENEMY_COUNT;i++) if(!game.enemies[i].hp) {
         e=&game.enemies[i]; r=random_byte();
-        e->x=(r&1)?80:((r&2)?16:144);
-        e->y=(r&4)?24:118;
+        e->x=(missions[mission_index].type==DEFENSE || missions[mission_index].type==ESCORT)?game.objects[0].x:game.x;
+        e->x+=(r&1)?88:-88;
+        if(e->x<16) e->x=16; if(e->x>WORLD_WIDTH-16) e->x=WORLD_WIDTH-16;
+        e->y=(r&4)?32:112;
         e->kind=(r&8)?1:0; e->hp=missions[mission_index].difficulty>1?3:2;
         e->cool=60+(r&63); e->flash=0;
         game.spawned++; return;
@@ -115,8 +122,9 @@ void game_start(void) {
     game.x=80; game.y=112; game.hull=MAX_HULL; game.rng=0x6a31+mission_index*139;
     game.spawn_cool=90; game.invuln=60; rewinds=0;
     if(type==DEFENSE || type==ESCORT) {
-        game.objects[0].x=80; game.objects[0].y=type==DEFENSE?72:104;
+        game.objects[0].x=type==DEFENSE?800:80; game.objects[0].y=80;
         game.objects[0].hp=12; game.objects[0].kind=type==DEFENSE?1:4;
+        if(type==DEFENSE) { game.x=800; game.camera_x=720; }
     } else if(type==RAID || type==SABOTAGE || type==RESCUE) {
         for(i=0;i<3;i++) {
             game.objects[i].x=gate_x[i]; game.objects[i].y=gate_y[i];
@@ -127,7 +135,7 @@ void game_start(void) {
         game.objects[0].x=gate_x[0]; game.objects[0].y=gate_y[0];
         game.objects[0].kind=6; game.objects[0].hp=1;
     } else if(type==BOSS || type==CHASE) {
-        game.enemies[0].x=80; game.enemies[0].y=32;
+        game.enemies[0].x=type==BOSS?1456:240; game.enemies[0].y=type==BOSS?32:80;
         game.enemies[0].kind=2; game.enemies[0].hp=type==BOSS?36:16;
         game.enemies[0].cool=60;
     }
@@ -166,6 +174,10 @@ static void player_tick(uint8_t held,uint8_t pressed) {
     nx=game.x+dx; ny=game.y+dy;
     if(!map_solid(nx-4,game.y-4) && !map_solid(nx+4,game.y+4)) game.x=nx;
     if(!map_solid(game.x-4,ny-4) && !map_solid(game.x+4,ny+4)) game.y=ny;
+    if(game.x-game.camera_x>CAMERA_RIGHT) game.camera_x=game.x-CAMERA_RIGHT;
+    else if(game.x-game.camera_x<CAMERA_LEFT) game.camera_x=game.x-CAMERA_LEFT;
+    if(game.camera_x<0) game.camera_x=0;
+    if(game.camera_x>WORLD_WIDTH-160) game.camera_x=WORLD_WIDTH-160;
     if(game.boost) game.boost--;
     if(game.boost_cool) game.boost_cool--;
     if(game.invuln) game.invuln--;
@@ -186,17 +198,20 @@ static void enemies_tick(void) {
     }
     for(i=0;i<ENEMY_COUNT;i++) {
         e=&game.enemies[i]; if(!e->hp) continue;
+        if(e->kind!=2 && type!=DEFENSE && type!=ESCORT && distance(e->x-game.x)>272) { e->hp=0; continue; }
         if(e->flash) e->flash--;
         tx=game.x; ty=game.y;
         if(type==DEFENSE || type==ESCORT) { tx=game.objects[0].x; ty=game.objects[0].y; }
         if(e->kind==2) {
             if((game.ticks&1)==0) {
-                e->x+=((game.ticks/112)&1)?-1:1;
-                if(e->x<24) e->x=24; if(e->x>136) e->x=136;
+                if(type==CHASE) { if(e->x<1480) e->x++; }
+                else {
+                    e->x+=((game.ticks/112)&1)?-1:1;
+                    if(e->x<1360) e->x=1360; if(e->x>1552) e->x=1552;
+                }
             }
             if(type==CHASE) {
-                direction=(game.ticks/3u)%112u;
-                e->y=30+(direction<56?direction:112-direction);
+                e->y=80;
             }
         } else if((game.ticks+i)%3==0) {
             nx=e->x+sign(tx-e->x); ny=e->y+sign(ty-e->y);
@@ -204,7 +219,7 @@ static void enemies_tick(void) {
             if(!map_solid(e->x,ny)) e->y=ny;
         }
         if(e->cool) e->cool--;
-        if(!e->cool) {
+        if(!e->cool && distance(e->x-tx)<176) {
             if(e->kind==2 && type==BOSS) {
                 phase=e->hp>24?0:(e->hp>12?1:2);
                 if(game.channel!=phase) {
@@ -260,11 +275,10 @@ static void objectives_tick(void) {
     Objective *o;
     if(type==ESCORT) {
         o=&game.objects[0];
-        if(++game.convoy_clock>=4) {
+        if(++game.convoy_clock>=2 && game.convoy_step<4) {
             game.convoy_clock=0;
             o->x+=sign((int16_t)route_x[game.convoy_step]-o->x);
-            o->y+=sign((int16_t)route_y[game.convoy_step]-o->y);
-            if(o->x==route_x[game.convoy_step] && o->y==route_y[game.convoy_step]) { game.convoy_step++; game.progress++; }
+            if(o->x==route_x[game.convoy_step]) { game.convoy_step++; game.progress++; }
         }
     }
     if(type==RESCUE) for(i=0;i<3;i++) {
@@ -307,6 +321,21 @@ static void objectives_tick(void) {
     if(checkpoint_ready) {
         game.checkpoint_mark=1; game_checkpoint();
     }
+}
+int16_t game_target_x(void) {
+    uint8_t i,type=missions[mission_index].type;
+    int16_t target=game.x;
+    uint16_t best=65535,delta;
+    if(type==DEFENSE || type==ESCORT || type==EVADE) return game.objects[0].x;
+    if(type==BOSS || type==CHASE) return game.enemies[0].x;
+    if(type==RESCUE && game.progress>=3) return 80;
+    if(type==RAID || type==RESCUE || type==SABOTAGE) {
+        for(i=0;i<3;i++) if(game.objects[i].hp) {
+            delta=distance(game.x-game.objects[i].x);
+            if(delta<best) { best=delta; target=game.objects[i].x; }
+        }
+    }
+    return target;
 }
 void game_tick(uint8_t held,uint8_t pressed,uint8_t elapsed) {
     uint8_t i;
