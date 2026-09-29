@@ -1,12 +1,16 @@
-# Rollback — Episode 1
+# Rollback
 
-A native Game Boy Color shooter for the ModRetro Chromatic, built with GBDK-2020 and C on Mini1.
+A native Game Boy Color flight-and-combat game for the **ModRetro Chromatic**. Fly, fight, protect your objectives, and restore the timeline when a sortie goes wrong.
 
-**Current build: v0.1.0 training prototype.** Twelve temporary scenarios exercise the Episode 1 game systems. The authored missions 1–12, character dialogue, and story events are pending the Story Bible, Mission List, and Episode 1 Scripts. The only supplied story document so far is *Handoff for Astra*. Scenario names and objectives in `data/training.json` are explicitly non-canonical.
+**[Download the playable ROM](https://github.com/Zollicoff/Rollback/releases/tag/v0.1.0-training)** · [Mac & cartridge setup](docs/mac-cartridge-setup.md) · [Build plan](docs/build-plan.md)
+
+![Rollback running in a Game Boy Color emulator: the heavy-drone boss fight](docs/images/boss-fight.png)
+
+**Current release: v0.1.0 training prototype.** Twelve playable drills exercise the Episode 1 systems, from rescue and sabotage to a three-phase boss. These are temporary scenarios; the authored Episode 1 campaign, dialogue, and story events are still to come. Episodes 2–4 are deferred.
 
 ## Play
 
-Download the ZIP from this private repository’s [releases](https://github.com/Zollicoff/game-rollback/releases). Open `rollback-e1-training.gbc` in a Game Boy Color emulator or use the supported Chromatic cartridge workflow. The `.rom` file in the ZIP contains identical bytes.
+Download and unzip the [release bundle](https://github.com/Zollicoff/Rollback/releases/tag/v0.1.0-training). Open `rollback-e1-training.gbc` in a Game Boy Color emulator, such as [SameBoy](https://sameboy.github.io/), or follow the [Chromatic cartridge instructions](docs/mac-cartridge-setup.md). The included `.rom` contains identical bytes. The ZIP also includes a quick-start guide, checksums, screenshots, and the verification report.
 
 | Control | Action |
 | --- | --- |
@@ -20,11 +24,13 @@ On death, A restores the latest in-game checkpoint; B restarts the sortie. Compl
 
 See [Mac setup](docs/mac-cartridge-setup.md) and [release instructions](docs/release-guide.md). The ROM is CGB-only, 64 KiB, MBC5 (`0x19`), with no external RAM. Its compatibility with the physical DevDay cartridge still requires detection and a hardware test.
 
-## Build on Mini1
+## Build from source
 
 Python 3.12+ and `make` are needed. The verified development host is Apple Silicon macOS. Toolchain downloads are pinned to GBDK 4.5.0 and checked against official release SHA-256 digests.
 
 ```sh
+git clone https://github.com/Zollicoff/Rollback.git
+cd Rollback
 make setup
 make
 make play
@@ -59,3 +65,9 @@ Physical cartridge boot, controls, audio, and power-cycle testing are outstandin
 - `docs/build-plan.md`: scope, completed work, and remaining work.
 
 Runtime acknowledgments and the GBDK library linking exception are in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+
+## Feedback and project status
+
+Play reports are welcome in [Issues](https://github.com/Zollicoff/Rollback/issues). Include the release version, emulator or hardware, drill number, and what happened. For checkpoints or resume codes, describe the steps leading to the problem.
+
+The project has not yet selected a general source or asset license. The third-party notices apply to their named components.

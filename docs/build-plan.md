@@ -5,7 +5,7 @@ Updated September 29, 2026. Zach authorized implementation and narrowed the MVP 
 ## Confirmed direction
 
 - Target the ModRetro Chromatic and the rewritable cartridge Zach received at DevDay.
-- Build on Mini1 in `/Volumes/zas-hot-22/Github/game-rollback`.
+- Build on Apple Silicon macOS and distribute portable ROM releases.
 - The assistant owns code, assets, level authoring, computer-use operation, builds, and emulator verification. Zach supplies creative direction and physical-device interaction where it is not exposed to the computer.
 - The earlier Phaser + TypeScript runtime is superseded. Its plan is preserved in [the September 27 archive](archive/phaser-build-plan-2026-09-27.md).
 - Zach is remote on his MacBook Pro. Build on Mini1 and deliver downloadable ROM releases; cartridge connection, activation, and writing happen on the MacBook Pro.
@@ -34,7 +34,7 @@ Use **Game Boy Color** as the initial hardware target. Original monochrome Game 
 | Story authoring | Readable source data converted to compact banked ROM data at build time | Keep writing editable without requiring JSON parsing or a scripting runtime on the device |
 | Progress | Four-digit resume passwords, implemented | Avoid depending on still-unknown cartridge save hardware |
 
-GBDK was selected for the first implementation under Zach’s authorization to start building. The official ModRetro Codex plugin’s GB Studio workflow remains an alternative, but has not been installed or evaluated against this prototype. Its cartridge-writing path is independent of the game runtime choice.
+GBDK was selected for the first implementation under Zach’s authorization to start building. The official ModRetro Codex plugin’s GB Studio workflow remains an alternative, but has not been evaluated against this prototype. Its cartridge-writing path is independent of the game runtime choice.
 
 Sources: [Chromatic cartridge compatibility](https://support.modretro.com/en_us/welcome-to-chromatic-using-chromatic-rJGfWxdRx), [Chromatic display](https://modretro.com/blogs/blog/display-the-hard-way), [GBDK on macOS and ROM building](https://gbdk.org/docs/api/docs_getting_started.html), [GBDK banking and cartridge controllers](https://gbdk.org/docs/api/docs_rombanking_mbcs.html), [GB Studio scene types](https://www.gbstudio.dev/docs/project-editor/scenes/types/), [GB Studio ROM export](https://www.gbstudio.dev/docs/build/), [SameBoy](https://sameboy.github.io/).
 

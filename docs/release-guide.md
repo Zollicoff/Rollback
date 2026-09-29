@@ -2,7 +2,7 @@
 
 This is a playable **training prototype** for the Episode 1 systems. Its twelve drills are temporary gameplay scenarios. The completed Episode 1 story has not yet been supplied for integration.
 
-1. Download and unzip the release ZIP while signed in to GitHub with access to `Zollicoff/game-rollback`.
+1. Download and unzip the ZIP from [Rollback releases](https://github.com/Zollicoff/Rollback/releases).
 2. Open `rollback-e1-training.gbc` in a Game Boy Color emulator, such as [SameBoy](https://sameboy.github.io/), or use the ModRetro Chromatic Codex plugin’s ROM preview if available. Choose Game Boy Color mode. The companion `.rom` is an identical copy, not a different format.
 3. Select **Enter Simulator**, choose a drill, and press A through the briefing and objective to launch.
 
