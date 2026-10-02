@@ -1,13 +1,13 @@
 """Observe navigation arrows in actual ROM OAM/framebuffers, using buttons only."""
 from rom_harness import Console
+from campaign_playthrough import resume_code
 
 def verify_waypoints(rom):
-    for index,palette,name in [(0,3,'protect'),(1,1,'attack'),(2,6,'rescue'),
-                               (5,2,'sabotage'),(8,6,'navigate'),(11,1,'boss')]:
+    for index,palette,name in [(1,3,'protect'),(5,1,'attack'),(36,6,'rescue'),
+                               (19,2,'sabotage'),(20,6,'navigate'),(12,1,'boss')]:
         c=Console(rom)
         try:
-            c.resume(2648)
-            for _ in range(11-index): c.tap('left',after=3)
+            c.resume(resume_code(index))
             c.launch(); c.hold([],65)
             arrow=c.sprite_screen(38)
             assert arrow and (arrow[3]&7)==palette,(name,arrow)
@@ -15,7 +15,7 @@ def verify_waypoints(rom):
             assert 12<=arrow[0]<=156 and 12<=arrow[1]<=104,(name,arrow)
             c.screenshot('waypoint-'+name)
             # Swarm missions acquire a living enemy independently of objectives.
-            if index==0:
+            if index==1:
                 for _ in range(300):
                     c.tick()
                     threat=c.sprite_screen(39)

@@ -1,5 +1,17 @@
 # Changes
 
+## 0.4.0-campaign — October 1, 2026
+
+- Integrate all nine supplied story documents: 54 missions, four episodes, complete dialogue and story events, the main ending, and unlocked Loop 2.
+- Add paginated dialogue, character portraits/moods, stage-direction captions, replay clue highlighting, and story-aware combat barks.
+- Add ten terrain themes, the full enemy roster, eight pickup effects, four difficulties, an archive, and session achievements.
+- Implement escape and pursuit variants, radar, duplicate ships, rescue cages, seven-site carrier raid, scripted failed interceptions, the dual-boss roof fight, peaceful targets, and Rule Zero upload defense.
+- Preserve two-axis worlds, padded camera movement, fixed HUD, colored waypoints, and complete checkpoint restoration. Separate movement cadence from rendering duration.
+- Use six-digit progress codes and a banked 256 KiB cartridge; retain the no-SRAM requirement. Put sprites in their own CGB video-memory bank.
+- Verify authored briefings/debriefs against source Markdown through the actual ROM display. Package only the exact tested binary.
+- Protect the first radio page from firing during its transition, and checkpoint between the two opponents in Mission 26.
+
+
 ## 0.3.1-waypoints — local build
 
 - Add eight-direction objective and nearest-enemy arrows, clamped inside the playfield and colored by purpose.

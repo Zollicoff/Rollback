@@ -4,13 +4,16 @@ No source-coordinate reads, game RAM writes or invulnerability switches.
 The previous horizontal-only build fails the first vertical follow assertion.
 """
 import numpy as np
+from pathlib import Path
 from rom_harness import Console
+from campaign_playthrough import resume_code,CampaignPilot
+import json
 
 
 def verify_scrolling(rom):
     c=Console(rom)
     try:
-        c.resume(1412);c.launch();c.hold([],65)
+        c.resume(resume_code(36));c.launch();c.hold([],65)
         origin=c.save()
         c.hold(['down'],120)
         assert c.emu.screen.tilemap_position_list[64][1]>0, 'Camera must follow vertically before the bottom edge'
@@ -32,9 +35,10 @@ def verify_scrolling(rom):
             c.hold([reverse],90)
             assert camera()<offset, 'Camera did not follow back'
         c.close()
-        # The boss drill separates travel/boundary checks from swarm tactics.
-        c=Console(rom);c.resume(2648);c.launch();c.hold([],65)
+        # The peaceful valley separates travel/boundary checks from combat.
+        c=Console(rom);c.resume(resume_code(35));c.launch();c.hold([],65)
         c.screenshot('world-northwest')
+        pilot=CampaignPilot(c,json.loads(Path('data/campaign.json').read_text())['missions'][34])
         start_map=[[c.tile(x,y) for x in range(20)] for y in range(14)]
         frame=np.array(c.emu.screen.image)
         hp_pixels=frame[112:120,:16].copy();target_pixels=frame[128:136,:48].copy()
@@ -44,7 +48,8 @@ def verify_scrolling(rom):
         for direction,axis,edge,name in legs:
             c.hold([direction],2)
             for step in range(600):
-                c.hold([direction,'a']+(['b'] if 'B OK' in c.line(0) else []),8)
+                c.hold([direction]+(['b'] if 'B OK' in c.line(0) else []),8)
+                pilot.drain_radio()
                 if not c.line(0).startswith('HP'):
                     c.screenshot('world-first-failure-'+direction)
                     c.hold([],40)
@@ -59,7 +64,8 @@ def verify_scrolling(rom):
                 columns.add(int(c.line(16)[15:17]));rows.add(int(c.line(16)[18:20]))
                 if abs(c.player()[axis]-edge)<=1:break
             assert abs(c.player()[axis]-edge)<=1, 'Could not reach '+name
-            c.hold([direction,'a'],24)
+            c.hold([direction],24)
+            pilot.drain_radio()
             assert abs(c.player()[axis]-edge)<=1, 'World boundary did not clamp at '+name
             c.screenshot(name)
             if name=='world-southeast':

@@ -1,0 +1,1626 @@
+{
+  "missions": [
+    {
+      "id": 1,
+      "type": "DEFENSE",
+      "rule": "STANDARD",
+      "layout": 0,
+      "episode": 1,
+      "goal": 8,
+      "enemy": 0,
+      "boss": 5,
+      "seconds": 360,
+      "setting": "KESTREL, 2131",
+      "hint": "PROTECT GREEN TARGET",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          800,
+          800
+        ]
+      ]
+    },
+    {
+      "id": 2,
+      "type": "ESCORT",
+      "rule": "STANDARD",
+      "layout": 0,
+      "episode": 1,
+      "goal": 4,
+      "enemy": 0,
+      "boss": 5,
+      "seconds": 600,
+      "setting": "KESTREL, 2131",
+      "hint": "STAY WITH TRANSPORT",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          400,
+          80
+        ],
+        [
+          400,
+          656
+        ],
+        [
+          1520,
+          656
+        ],
+        [
+          1520,
+          1376
+        ]
+      ]
+    },
+    {
+      "id": 3,
+      "type": "RAID",
+      "rule": "STANDARD",
+      "layout": 0,
+      "episode": 1,
+      "goal": 1,
+      "enemy": 0,
+      "boss": 5,
+      "seconds": 360,
+      "setting": "KESTREL, 2131",
+      "hint": "FIRE AT RED TARGETS",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          800,
+          752
+        ]
+      ]
+    },
+    {
+      "id": 4,
+      "type": "DEFENSE",
+      "rule": "STANDARD",
+      "layout": 0,
+      "episode": 1,
+      "goal": 10,
+      "enemy": 0,
+      "boss": 5,
+      "seconds": 360,
+      "setting": "KESTREL, 2131",
+      "hint": "PROTECT GREEN TARGET",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          1120,
+          1088
+        ]
+      ]
+    },
+    {
+      "id": 5,
+      "type": "RAID",
+      "rule": "STANDARD",
+      "layout": 0,
+      "episode": 1,
+      "goal": 1,
+      "enemy": 0,
+      "boss": 5,
+      "seconds": 360,
+      "setting": "KESTREL, 2131",
+      "hint": "FIRE AT RED TARGETS",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          800,
+          752
+        ]
+      ]
+    },
+    {
+      "id": 6,
+      "type": "SURVIVAL",
+      "rule": "STANDARD",
+      "layout": 0,
+      "episode": 1,
+      "goal": 45,
+      "enemy": 0,
+      "boss": 5,
+      "seconds": 45,
+      "setting": "KESTREL, 2131",
+      "hint": "MOVE. OUTLAST SWARM.",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          240,
+          224
+        ],
+        [
+          800,
+          752
+        ],
+        [
+          1440,
+          1232
+        ],
+        [
+          1552,
+          1376
+        ]
+      ]
+    },
+    {
+      "id": 7,
+      "type": "CHASE",
+      "rule": "ESCAPE",
+      "layout": 0,
+      "episode": 1,
+      "goal": 4,
+      "enemy": 0,
+      "boss": 5,
+      "seconds": 600,
+      "setting": "KESTREL, 2131",
+      "hint": "REACH CYAN GATES",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          240,
+          224
+        ],
+        [
+          800,
+          752
+        ],
+        [
+          1440,
+          1232
+        ],
+        [
+          1552,
+          1376
+        ]
+      ]
+    },
+    {
+      "id": 8,
+      "type": "RAID",
+      "rule": "STANDARD",
+      "layout": 0,
+      "episode": 1,
+      "goal": 3,
+      "enemy": 0,
+      "boss": 5,
+      "seconds": 360,
+      "setting": "KESTREL, 2131",
+      "hint": "FIRE AT RED TARGETS",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          240,
+          224
+        ],
+        [
+          800,
+          752
+        ],
+        [
+          1440,
+          1232
+        ],
+        [
+          1552,
+          1376
+        ]
+      ]
+    },
+    {
+      "id": 9,
+      "type": "EVADE",
+      "rule": "DUPLICATE",
+      "layout": 0,
+      "episode": 1,
+      "goal": 30,
+      "enemy": 0,
+      "boss": 5,
+      "seconds": 30,
+      "setting": "KESTREL, 2131",
+      "hint": "AVOID YOUR PAST SELF",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          240,
+          224
+        ],
+        [
+          800,
+          752
+        ],
+        [
+          1440,
+          1232
+        ],
+        [
+          1552,
+          1376
+        ]
+      ]
+    },
+    {
+      "id": 10,
+      "type": "DEFENSE",
+      "rule": "STANDARD",
+      "layout": 0,
+      "episode": 1,
+      "goal": 12,
+      "enemy": 0,
+      "boss": 5,
+      "seconds": 360,
+      "setting": "KESTREL, 2131",
+      "hint": "PROTECT GREEN TARGET",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          1120,
+          1088
+        ]
+      ]
+    },
+    {
+      "id": 11,
+      "type": "RAID",
+      "rule": "STANDARD",
+      "layout": 0,
+      "episode": 1,
+      "goal": 7,
+      "enemy": 0,
+      "boss": 5,
+      "seconds": 360,
+      "setting": "KESTREL, 2131",
+      "hint": "SEVEN CARRIER SITES",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          240,
+          224
+        ],
+        [
+          400,
+          368
+        ],
+        [
+          560,
+          512
+        ],
+        [
+          800,
+          656
+        ],
+        [
+          960,
+          800
+        ],
+        [
+          1280,
+          1088
+        ],
+        [
+          1440,
+          1232
+        ]
+      ]
+    },
+    {
+      "id": 12,
+      "type": "BOSS",
+      "rule": "STANDARD",
+      "layout": 0,
+      "episode": 1,
+      "goal": 1,
+      "enemy": 0,
+      "boss": 5,
+      "seconds": 240,
+      "setting": "KESTREL, 2131",
+      "hint": "DODGE. AIM. FIRE.",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          1456,
+          1328
+        ],
+        [
+          1360,
+          1232
+        ]
+      ]
+    },
+    {
+      "id": 13,
+      "type": "RESCUE",
+      "rule": "PILOT_RESCUE",
+      "layout": 1,
+      "episode": 2,
+      "goal": 4,
+      "enemy": 6,
+      "boss": 5,
+      "seconds": 360,
+      "setting": "CHANNEL, 1943",
+      "hint": "CLEAR FOUR BANDITS",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          800,
+          752
+        ]
+      ]
+    },
+    {
+      "id": 14,
+      "type": "ESCORT",
+      "rule": "STANDARD",
+      "layout": 1,
+      "episode": 2,
+      "goal": 4,
+      "enemy": 6,
+      "boss": 5,
+      "seconds": 600,
+      "setting": "CHANNEL, 1943",
+      "hint": "STAY WITH TRANSPORT",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          400,
+          80
+        ],
+        [
+          400,
+          656
+        ],
+        [
+          1520,
+          656
+        ],
+        [
+          1520,
+          1376
+        ]
+      ]
+    },
+    {
+      "id": 15,
+      "type": "RAID",
+      "rule": "STANDARD",
+      "layout": 1,
+      "episode": 2,
+      "goal": 1,
+      "enemy": 6,
+      "boss": 5,
+      "seconds": 360,
+      "setting": "CHANNEL, 1943",
+      "hint": "FIRE AT RED TARGETS",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          800,
+          752
+        ]
+      ]
+    },
+    {
+      "id": 16,
+      "type": "BOSS",
+      "rule": "STANDARD",
+      "layout": 1,
+      "episode": 2,
+      "goal": 1,
+      "enemy": 6,
+      "boss": 5,
+      "seconds": 360,
+      "setting": "CHANNEL, 1943",
+      "hint": "DODGE. AIM. FIRE.",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          1456,
+          1328
+        ],
+        [
+          1360,
+          1232
+        ]
+      ]
+    },
+    {
+      "id": 17,
+      "type": "CHASE",
+      "rule": "FLEET",
+      "layout": 2,
+      "episode": 2,
+      "goal": 5,
+      "enemy": 7,
+      "boss": 5,
+      "seconds": 600,
+      "setting": "RIVER, 1926",
+      "hint": "PURSUE RED TARGETS",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          240,
+          224
+        ],
+        [
+          800,
+          752
+        ],
+        [
+          1440,
+          1232
+        ],
+        [
+          1552,
+          1376
+        ]
+      ]
+    },
+    {
+      "id": 18,
+      "type": "DEFENSE",
+      "rule": "STANDARD",
+      "layout": 2,
+      "episode": 2,
+      "goal": 10,
+      "enemy": 7,
+      "boss": 5,
+      "seconds": 360,
+      "setting": "RIVER, 1926",
+      "hint": "PROTECT GREEN TARGET",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          1120,
+          1088
+        ]
+      ]
+    },
+    {
+      "id": 19,
+      "type": "SABOTAGE",
+      "rule": "STANDARD",
+      "layout": 2,
+      "episode": 2,
+      "goal": 3,
+      "enemy": 7,
+      "boss": 5,
+      "seconds": 360,
+      "setting": "RIVER, 1926",
+      "hint": "HOLD B AT AMBER SITE",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          400,
+          656
+        ],
+        [
+          800,
+          656
+        ],
+        [
+          1280,
+          656
+        ]
+      ]
+    },
+    {
+      "id": 20,
+      "type": "EVADE",
+      "rule": "RADAR",
+      "layout": 3,
+      "episode": 2,
+      "goal": 4,
+      "enemy": 8,
+      "boss": 5,
+      "seconds": 360,
+      "setting": "AIR BASE, 1962",
+      "hint": "RADAR: WAIT IN COVER",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          240,
+          224
+        ],
+        [
+          800,
+          752
+        ],
+        [
+          1440,
+          1232
+        ],
+        [
+          1552,
+          1376
+        ]
+      ]
+    },
+    {
+      "id": 21,
+      "type": "SABOTAGE",
+      "rule": "LAUNCH_FAILURE",
+      "layout": 3,
+      "episode": 2,
+      "goal": 2,
+      "enemy": 8,
+      "boss": 5,
+      "seconds": 360,
+      "setting": "AIR BASE, 1962",
+      "hint": "HOLD B AT AMBER SITE",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          800,
+          752
+        ],
+        [
+          1440,
+          1232
+        ]
+      ]
+    },
+    {
+      "id": 22,
+      "type": "EVADE",
+      "rule": "DUPLICATE",
+      "layout": 3,
+      "episode": 2,
+      "goal": 4,
+      "enemy": 8,
+      "boss": 5,
+      "seconds": 360,
+      "setting": "AIR BASE, 1962",
+      "hint": "AVOID YOUR OTHER YOU",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          240,
+          224
+        ],
+        [
+          800,
+          752
+        ],
+        [
+          1440,
+          1232
+        ],
+        [
+          1552,
+          1376
+        ]
+      ]
+    },
+    {
+      "id": 23,
+      "type": "SURVIVAL",
+      "rule": "STANDARD",
+      "layout": 3,
+      "episode": 2,
+      "goal": 60,
+      "enemy": 8,
+      "boss": 5,
+      "seconds": 60,
+      "setting": "AIR BASE, 1962",
+      "hint": "MOVE. OUTLAST SWARM.",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          240,
+          224
+        ],
+        [
+          800,
+          752
+        ],
+        [
+          1440,
+          1232
+        ],
+        [
+          1552,
+          1376
+        ]
+      ]
+    },
+    {
+      "id": 24,
+      "type": "DEFENSE",
+      "rule": "STANDARD",
+      "layout": 4,
+      "episode": 2,
+      "goal": 10,
+      "enemy": 9,
+      "boss": 5,
+      "seconds": 360,
+      "setting": "NEW YEAR'S EVE, 1999",
+      "hint": "PROTECT GREEN TARGET",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          1120,
+          1088
+        ]
+      ]
+    },
+    {
+      "id": 25,
+      "type": "RAID",
+      "rule": "SEARCH",
+      "layout": 4,
+      "episode": 2,
+      "goal": 3,
+      "enemy": 9,
+      "boss": 5,
+      "seconds": 360,
+      "setting": "NEW YEAR'S EVE, 1999",
+      "hint": "FIRE AT RED TARGETS",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          240,
+          224
+        ],
+        [
+          800,
+          752
+        ],
+        [
+          1440,
+          1232
+        ],
+        [
+          1552,
+          1376
+        ]
+      ]
+    },
+    {
+      "id": 26,
+      "type": "BOSS",
+      "rule": "DUAL_BOSS",
+      "layout": 4,
+      "episode": 2,
+      "goal": 2,
+      "enemy": 9,
+      "boss": 4,
+      "seconds": 300,
+      "setting": "NEW YEAR'S EVE, 1999",
+      "hint": "DODGE. AIM. FIRE.",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          1456,
+          1328
+        ],
+        [
+          1360,
+          1232
+        ]
+      ]
+    },
+    {
+      "id": 27,
+      "type": "EVADE",
+      "rule": "STANDARD",
+      "layout": 5,
+      "episode": 3,
+      "goal": 4,
+      "enemy": 10,
+      "boss": 5,
+      "seconds": 360,
+      "setting": "CULT OF ACE",
+      "hint": "FOLLOW CYAN GATES",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          240,
+          224
+        ],
+        [
+          800,
+          752
+        ],
+        [
+          1440,
+          1232
+        ],
+        [
+          1552,
+          1376
+        ]
+      ]
+    },
+    {
+      "id": 28,
+      "type": "RAID",
+      "rule": "STANDARD",
+      "layout": 5,
+      "episode": 3,
+      "goal": 3,
+      "enemy": 10,
+      "boss": 5,
+      "seconds": 360,
+      "setting": "CULT OF ACE",
+      "hint": "FIRE AT RED TARGETS",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          240,
+          224
+        ],
+        [
+          800,
+          752
+        ],
+        [
+          1440,
+          1232
+        ],
+        [
+          1552,
+          1376
+        ]
+      ]
+    },
+    {
+      "id": 29,
+      "type": "DEFENSE",
+      "rule": "STANDARD",
+      "layout": 5,
+      "episode": 3,
+      "goal": 12,
+      "enemy": 10,
+      "boss": 5,
+      "seconds": 360,
+      "setting": "CULT OF ACE",
+      "hint": "PROTECT GREEN TARGET",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          800,
+          800
+        ]
+      ]
+    },
+    {
+      "id": 30,
+      "type": "BOSS",
+      "rule": "STANDARD",
+      "layout": 5,
+      "episode": 3,
+      "goal": 1,
+      "enemy": 10,
+      "boss": 11,
+      "seconds": 360,
+      "setting": "CULT OF ACE",
+      "hint": "DODGE. AIM. FIRE.",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          1456,
+          1328
+        ],
+        [
+          1360,
+          1232
+        ]
+      ]
+    },
+    {
+      "id": 31,
+      "type": "CHASE",
+      "rule": "FLEET",
+      "layout": 6,
+      "episode": 3,
+      "goal": 4,
+      "enemy": 12,
+      "boss": 5,
+      "seconds": 600,
+      "setting": "NEWSREEL EMPIRE",
+      "hint": "PURSUE RED TARGETS",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          240,
+          224
+        ],
+        [
+          800,
+          752
+        ],
+        [
+          1440,
+          1232
+        ],
+        [
+          1552,
+          1376
+        ]
+      ]
+    },
+    {
+      "id": 32,
+      "type": "ESCORT",
+      "rule": "STANDARD",
+      "layout": 6,
+      "episode": 3,
+      "goal": 4,
+      "enemy": 12,
+      "boss": 5,
+      "seconds": 600,
+      "setting": "NEWSREEL EMPIRE",
+      "hint": "STAY WITH TRANSPORT",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          400,
+          80
+        ],
+        [
+          400,
+          656
+        ],
+        [
+          1520,
+          656
+        ],
+        [
+          1520,
+          1376
+        ]
+      ]
+    },
+    {
+      "id": 33,
+      "type": "BOSS",
+      "rule": "STANDARD",
+      "layout": 6,
+      "episode": 3,
+      "goal": 1,
+      "enemy": 12,
+      "boss": 12,
+      "seconds": 360,
+      "setting": "NEWSREEL EMPIRE",
+      "hint": "DODGE. AIM. FIRE.",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          1456,
+          1328
+        ],
+        [
+          1360,
+          1232
+        ]
+      ]
+    },
+    {
+      "id": 34,
+      "type": "EVADE",
+      "rule": "STANDARD",
+      "layout": 7,
+      "episode": 3,
+      "goal": 4,
+      "enemy": 13,
+      "boss": 5,
+      "seconds": 360,
+      "setting": "THE WINNERS",
+      "hint": "FOLLOW CYAN GATES",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          240,
+          224
+        ],
+        [
+          800,
+          752
+        ],
+        [
+          1440,
+          1232
+        ],
+        [
+          1552,
+          1376
+        ]
+      ]
+    },
+    {
+      "id": 35,
+      "type": "RAID",
+      "rule": "PEACEFUL",
+      "layout": 7,
+      "episode": 3,
+      "goal": 3,
+      "enemy": 13,
+      "boss": 5,
+      "seconds": 360,
+      "setting": "THE WINNERS",
+      "hint": "FIRE AT RED TARGETS",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          400,
+          80
+        ],
+        [
+          800,
+          80
+        ],
+        [
+          1280,
+          80
+        ]
+      ]
+    },
+    {
+      "id": 36,
+      "type": "RESCUE",
+      "rule": "STANDARD",
+      "layout": 7,
+      "episode": 3,
+      "goal": 3,
+      "enemy": 13,
+      "boss": 5,
+      "seconds": 360,
+      "setting": "THE WINNERS",
+      "hint": "REACH CYAN TARGETS",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          240,
+          224
+        ],
+        [
+          800,
+          752
+        ],
+        [
+          1440,
+          1232
+        ],
+        [
+          1552,
+          1376
+        ]
+      ]
+    },
+    {
+      "id": 37,
+      "type": "BOSS",
+      "rule": "STANDARD",
+      "layout": 7,
+      "episode": 3,
+      "goal": 1,
+      "enemy": 13,
+      "boss": 13,
+      "seconds": 360,
+      "setting": "THE WINNERS",
+      "hint": "DODGE. AIM. FIRE.",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          1456,
+          1328
+        ],
+        [
+          1360,
+          1232
+        ]
+      ]
+    },
+    {
+      "id": 38,
+      "type": "SURVIVAL",
+      "rule": "STANDARD",
+      "layout": 8,
+      "episode": 3,
+      "goal": 45,
+      "enemy": 0,
+      "boss": 5,
+      "seconds": 45,
+      "setting": "THE QUIET ONE",
+      "hint": "MOVE. OUTLAST SWARM.",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          240,
+          224
+        ],
+        [
+          800,
+          752
+        ],
+        [
+          1440,
+          1232
+        ],
+        [
+          1552,
+          1376
+        ]
+      ]
+    },
+    {
+      "id": 39,
+      "type": "DEFENSE",
+      "rule": "STANDARD",
+      "layout": 8,
+      "episode": 3,
+      "goal": 4,
+      "enemy": 4,
+      "boss": 5,
+      "seconds": 360,
+      "setting": "THE QUIET ONE",
+      "hint": "PROTECT GREEN TARGET",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          800,
+          800
+        ]
+      ]
+    },
+    {
+      "id": 40,
+      "type": "BOSS",
+      "rule": "STANDARD",
+      "layout": 8,
+      "episode": 3,
+      "goal": 1,
+      "enemy": 5,
+      "boss": 5,
+      "seconds": 240,
+      "setting": "THE QUIET ONE",
+      "hint": "DODGE. AIM. FIRE.",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          1456,
+          1328
+        ],
+        [
+          1360,
+          1232
+        ]
+      ]
+    },
+    {
+      "id": 41,
+      "type": "SURVIVAL",
+      "rule": "STANDARD",
+      "layout": 9,
+      "episode": 4,
+      "goal": 40,
+      "enemy": 14,
+      "boss": 5,
+      "seconds": 40,
+      "setting": "DAY ZERO, 2089",
+      "hint": "MOVE. OUTLAST SWARM.",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          240,
+          224
+        ],
+        [
+          800,
+          752
+        ],
+        [
+          1440,
+          1232
+        ],
+        [
+          1552,
+          1376
+        ]
+      ]
+    },
+    {
+      "id": 42,
+      "type": "RAID",
+      "rule": "STANDARD",
+      "layout": 9,
+      "episode": 4,
+      "goal": 1,
+      "enemy": 14,
+      "boss": 5,
+      "seconds": 360,
+      "setting": "DAY ZERO, 2089",
+      "hint": "FIRE AT RED TARGETS",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          800,
+          752
+        ]
+      ]
+    },
+    {
+      "id": 43,
+      "type": "CHASE",
+      "rule": "UPLOAD_RACE",
+      "layout": 9,
+      "episode": 4,
+      "goal": 4,
+      "enemy": 14,
+      "boss": 5,
+      "seconds": 600,
+      "setting": "DAY ZERO, 2089",
+      "hint": "REACH CYAN GATES",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          240,
+          224
+        ],
+        [
+          800,
+          752
+        ],
+        [
+          1440,
+          1232
+        ],
+        [
+          1552,
+          1376
+        ]
+      ]
+    },
+    {
+      "id": 44,
+      "type": "DEFENSE",
+      "rule": "STANDARD",
+      "layout": 9,
+      "episode": 4,
+      "goal": 12,
+      "enemy": 14,
+      "boss": 5,
+      "seconds": 360,
+      "setting": "DAY ZERO, 2089",
+      "hint": "PROTECT GREEN TARGET",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          1120,
+          1088
+        ]
+      ]
+    },
+    {
+      "id": 45,
+      "type": "RAID",
+      "rule": "STANDARD",
+      "layout": 9,
+      "episode": 4,
+      "goal": 3,
+      "enemy": 15,
+      "boss": 5,
+      "seconds": 360,
+      "setting": "DAY ZERO, 2089",
+      "hint": "FIRE AT RED TARGETS",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          240,
+          224
+        ],
+        [
+          800,
+          752
+        ],
+        [
+          1440,
+          1232
+        ],
+        [
+          1552,
+          1376
+        ]
+      ]
+    },
+    {
+      "id": 46,
+      "type": "ESCORT",
+      "rule": "STANDARD",
+      "layout": 9,
+      "episode": 4,
+      "goal": 4,
+      "enemy": 15,
+      "boss": 5,
+      "seconds": 600,
+      "setting": "DAY ZERO, 2089",
+      "hint": "STAY WITH TRANSPORT",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          400,
+          80
+        ],
+        [
+          400,
+          656
+        ],
+        [
+          1520,
+          656
+        ],
+        [
+          1520,
+          1376
+        ]
+      ]
+    },
+    {
+      "id": 47,
+      "type": "DEFENSE",
+      "rule": "STANDARD",
+      "layout": 9,
+      "episode": 4,
+      "goal": 12,
+      "enemy": 15,
+      "boss": 5,
+      "seconds": 360,
+      "setting": "DAY ZERO, 2089",
+      "hint": "PROTECT GREEN TARGET",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          800,
+          800
+        ]
+      ]
+    },
+    {
+      "id": 48,
+      "type": "SABOTAGE",
+      "rule": "VIRUS",
+      "layout": 9,
+      "episode": 4,
+      "goal": 1,
+      "enemy": 15,
+      "boss": 5,
+      "seconds": 360,
+      "setting": "DAY ZERO, 2089",
+      "hint": "B PLANT; THEN GUARD",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          800,
+          752
+        ]
+      ]
+    },
+    {
+      "id": 49,
+      "type": "RAID",
+      "rule": "STANDARD",
+      "layout": 9,
+      "episode": 4,
+      "goal": 3,
+      "enemy": 15,
+      "boss": 5,
+      "seconds": 360,
+      "setting": "DAY ZERO, 2089",
+      "hint": "FIRE AT RED TARGETS",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          240,
+          224
+        ],
+        [
+          800,
+          752
+        ],
+        [
+          1440,
+          1232
+        ],
+        [
+          1552,
+          1376
+        ]
+      ]
+    },
+    {
+      "id": 50,
+      "type": "BOSS",
+      "rule": "STANDARD",
+      "layout": 9,
+      "episode": 4,
+      "goal": 1,
+      "enemy": 15,
+      "boss": 5,
+      "seconds": 360,
+      "setting": "DAY ZERO, 2089",
+      "hint": "DODGE. AIM. FIRE.",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          1456,
+          1328
+        ],
+        [
+          1360,
+          1232
+        ]
+      ]
+    },
+    {
+      "id": 51,
+      "type": "CHASE",
+      "rule": "ESCAPE",
+      "layout": 9,
+      "episode": 4,
+      "goal": 4,
+      "enemy": 15,
+      "boss": 5,
+      "seconds": 600,
+      "setting": "DAY ZERO, 2089",
+      "hint": "REACH CYAN GATES",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          240,
+          224
+        ],
+        [
+          800,
+          752
+        ],
+        [
+          1440,
+          1232
+        ],
+        [
+          1552,
+          1376
+        ]
+      ]
+    },
+    {
+      "id": 52,
+      "type": "SURVIVAL",
+      "rule": "STANDARD",
+      "layout": 9,
+      "episode": 4,
+      "goal": 60,
+      "enemy": 15,
+      "boss": 5,
+      "seconds": 60,
+      "setting": "DAY ZERO, 2089",
+      "hint": "MOVE. OUTLAST SWARM.",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          240,
+          224
+        ],
+        [
+          800,
+          752
+        ],
+        [
+          1440,
+          1232
+        ],
+        [
+          1552,
+          1376
+        ]
+      ]
+    },
+    {
+      "id": 53,
+      "type": "BOSS",
+      "rule": "STANDARD",
+      "layout": 9,
+      "episode": 4,
+      "goal": 1,
+      "enemy": 15,
+      "boss": 16,
+      "seconds": 360,
+      "setting": "DAY ZERO, 2089",
+      "hint": "DODGE. AIM. FIRE.",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          1456,
+          1328
+        ],
+        [
+          1360,
+          1232
+        ]
+      ]
+    },
+    {
+      "id": 54,
+      "type": "DEFENSE",
+      "rule": "STANDARD",
+      "layout": 0,
+      "episode": 4,
+      "goal": 8,
+      "enemy": 0,
+      "boss": 5,
+      "seconds": 360,
+      "setting": "KESTREL, 2131",
+      "hint": "PROTECT GREEN TARGET",
+      "start": [
+        80,
+        72
+      ],
+      "points": [
+        [
+          800,
+          800
+        ]
+      ]
+    }
+  ]
+}

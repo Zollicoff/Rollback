@@ -3,6 +3,11 @@ uint8_t sound_on=1;
 static uint8_t music_tick,note;
 static const uint16_t melody[16]={1310,0,1546,0,1468,0,1234,0,1310,0,1649,1546,1468,0,1234,0};
 
+static const uint16_t era_melodies[3][16]={
+ {1310,1468,1546,1649,1546,1468,1310,0,1234,1310,1468,1546,1468,1234,1310,0},
+ {1234,0,1310,0,1234,0,1160,0,1468,0,1310,1234,1160,0,1100,0},
+ {1310,1546,1649,0,1468,1546,1310,0,1234,1468,1546,0,1310,1234,1100,0}
+};
 void audio_init(void) {
     NR52_REG=0x80; NR50_REG=0x55; NR51_REG=0xff;
     NR10_REG=0; music_tick=0; note=0;
@@ -12,11 +17,11 @@ void audio_toggle(void) {
     if(sound_on) audio_init(); else NR52_REG=0;
 }
 void audio_tick(void) {
-    uint16_t frequency;
+    uint16_t frequency;uint8_t episode=mission_index==53 && !loop_two?1:mission.episode;
     if(!sound_on) return;
-    if(++music_tick<18) return;
+    if(++music_tick<(episode==4?14:episode==3?21:18)) return;
     music_tick=0;
-    frequency=melody[note++ & 15];
+    frequency=episode>1?era_melodies[episode-2][note++ & 15]:melody[note++ & 15];
     if(!frequency) return;
     NR21_REG=0x80; NR22_REG=(screen==PLAYING)?0x32:0x52;
     NR23_REG=(uint8_t)frequency; NR24_REG=0x80 | (frequency>>8);

@@ -1,6 +1,6 @@
 # Chromatic DevDay cartridge setup on Mac
 
-Verified September 29, 2026. Download a [Rollback release](https://github.com/Zollicoff/Rollback/releases) onto the Mac connected to your Chromatic. The v0.3.0 world ROM is built and emulator-verified. It has not been flashed to hardware.
+Setup instructions verified September 29, 2026. Download a [Rollback release](https://github.com/Zollicoff/Rollback/releases) onto the Mac connected to your Chromatic. Each bundle includes its emulator verification report. Physical cartridge testing remains outstanding.
 
 ## Official DevDay instructions
 
@@ -50,7 +50,7 @@ After unzipping a Rollback release, open Terminal in that folder. Verify the inc
 
 ```sh
 shasum -a 256 -c SHA256SUMS
-chromatic-cli write-homebrew rollback-e1-training.gbc --expect-sha256 ACTUAL_RELEASE_SHA256
+chromatic-cli write-homebrew rollback.gbc --expect-sha256 ACTUAL_RELEASE_SHA256
 ```
 
 Keep the CLI’s confirmation prompts enabled. `--expect-sha256` checks the input file; its help does not establish a cartridge readback guarantee. Record the writer’s actual verification result and then cold-boot and check controls/audio on the handheld. Host-emulated `live-demo` streaming does not prove that the cartridge boots independently.
@@ -59,5 +59,5 @@ Keep the CLI’s confirmation prompts enabled. `--expect-sha256` checks the inpu
 
 - Detect the actual cartridge model/capacity/controller/save support before setting final build budgets.
 - Obtain the issued activation code if it is missing; do not assume a public or universal code.
-- The first build uses GBDK/C, a CGB-only header, MBC5, 64 KiB ROM, and no external RAM. Confirm those declarations against the detected physical cart before flashing.
+- The campaign build uses GBDK/C, a CGB-only header, MBC5, 256 KiB ROM, and no external RAM. Confirm those declarations against the detected physical cart before flashing.
 - Release ZIPs contain the ROM, checksum, change notes, verification report, and these instructions. See [release instructions](release-guide.md) and [downloadable builds](https://github.com/Zollicoff/Rollback/releases).

@@ -113,19 +113,35 @@ class Console:
         self.emu.screen.image.resize((640,576),Image.Resampling.NEAREST).save(dest/(name+'.png'))
 
     def resume(self,code):
-        assert 'TRAINING SIMULATOR' in self.text()
+        training='TRAINING SIMULATOR' in self.text()
+        assert training or 'CAMPAIGN' in self.text(),self.text()
         self.tap('down');self.tap('a')
-        for i,(start,end) in enumerate(zip('1000',str(code))):
+        initial='1000' if training else '100000'
+        for i,(start,end) in enumerate(zip(initial,str(code))):
             change=(int(end)-int(start))%10
             button='up' if change<=5 else 'down'
             for _ in range(min(change,10-change)):self.tap(button,after=3)
-            if i<3:self.tap('right',after=3)
+            if i<len(initial)-1:self.tap('right',after=3)
         self.tap('a')
 
     def launch(self):
-        assert 'FLIGHT SIMULATOR' in self.text(), self.text()
-        for _ in range(3):self.tap('a')
+        if 'FLIGHT SIMULATOR' in self.text():
+            for _ in range(3):self.tap('a')
+        else:
+            assert 'MISSION' in self.text(),self.text()
+            self.tap('a')
+            for _ in range(150):
+                if self.line(0).startswith('HP'):break
+                if not self.text().strip():
+                    self.hold([],6);continue
+                assert 'BRIEFING' in self.text() or 'SQUAD RADIO' in self.text(),self.text()
+                self.tap('a',after=3)
+            else:raise AssertionError('Briefing did not end')
         self.hold([],15)
+        for _ in range(100):
+            if self.line(0).startswith('HP'):break
+            if 'SQUAD RADIO' in self.text():self.tap('a',after=3)
+            else:self.hold([],6)
         assert self.line(0).startswith('HP'),self.text()
 
     def close(self): self.emu.stop(save=False)

@@ -47,6 +47,9 @@ def encode(im):
         result += [lo,hi]
     return result
 
+FONT['"']='01010/01010/00000/00000/00000/00000/00000'
+FONT['%']='11001/11010/00100/01000/10110/00110/00000'
+FONT['&']='01100/10010/10100/01000/10101/10010/01101'
 bg=[blank() for _ in range(176)]
 for c in FONT: bg[ord(c)]=glyph(c)
 for i in range(96,128):
@@ -151,14 +154,45 @@ d.polygon([(3,1),(6,4),(4,4),(4,6),(3,6),(3,4),(1,4)],fill=2)
 for angle in range(0,360,45):
     sprites.extend([arrow.rotate(-angle,resample=Image.Resampling.NEAREST),blank()])
 assert len(sprites)==90
+# Each codex enemy has its own native 16 x 16 silhouette.
+for kind in range(17):
+    im=blank(16,16);d=ImageDraw.Draw(im)
+    if kind in (0,6,8,10,13,15):
+        d.polygon([(7,0),(9,6),(15,10),(15,12),(9,10),(9,15),(6,15),(6,10),(0,12),(0,10),(6,6)],fill=2)
+        d.line((7,3,7,12),fill=3)
+        if kind==6:d.line((3,3,12,3),fill=3)
+        if kind==8:d.polygon([(7,0),(11,13),(4,13)],outline=3)
+        if kind==10:d.ellipse((4,2,11,8),outline=3)
+        if kind==13:d.rectangle((5,5,9,9),fill=1)
+        if kind==15:d.line((3,12,12,12),fill=3)
+    elif kind in (2,3,7,12):
+        d.polygon([(7,0),(13,4),(13,12),(10,15),(5,15),(2,12),(2,4)],fill=2)
+        d.rectangle((5,4,10,11),fill=1);d.line((7,3,7,12),fill=3)
+        if kind==7:d.rectangle((6,6,11,9),fill=3)
+        if kind==12:d.ellipse((1,2,14,13),fill=2);d.line((3,7,12,7),fill=3)
+    elif kind==11:
+        d.rectangle((2,0,13,13),fill=2);d.rectangle((4,3,11,6),fill=1)
+        d.point((5,4),fill=3);d.point((10,4),fill=3);d.rectangle((6,13,9,15),fill=3)
+    elif kind==16:
+        d.polygon([(7,0),(15,7),(7,15),(0,7)],fill=2);d.ellipse((3,3,11,11),fill=1)
+        d.line((4,7,10,7),fill=3);d.line((7,4,7,10),fill=3)
+    else:
+        d.rounded_rectangle((2,1,13,14),radius=2,fill=2)
+        d.rectangle((4,4,11,10),fill=1);d.point((5,6),fill=3);d.point((10,6),fill=3)
+        if kind==5:d.line((5,10,10,10),fill=3);d.rectangle((6,0,9,3),fill=3)
+        elif kind==4:d.line((0,13,15,13),fill=3);d.line((7,0,7,15),fill=3)
+        elif kind==14:d.line((6,10,9,10),fill=3);d.line((0,7,3,5),fill=2)
+        elif kind==9:d.rectangle((5,12,10,14),fill=1)
+    sprite(im)
+assert len(sprites)==158
 def c_array(name,tiles):
     raw=sum((encode(t) for t in tiles),[])
     return 'const unsigned char '+name+'[] = {\n'+ '\n'.join('    '+','.join(f'0x{v:02x}' for v in raw[i:i+16])+',' for i in range(0,len(raw),16))+'\n};\n'
-Path('build/assets.c').write_text(c_array('background_tiles',bg)+c_array('sprite_tiles',sprites))
-Path('build/assets.h').write_text('#ifndef ASSETS_H\n#define ASSETS_H\nextern const unsigned char background_tiles[];\nextern const unsigned char sprite_tiles[];\n#endif\n')
+Path('build/assets.c').write_text('#pragma bank 255\n#include <gb/gb.h>\nBANKREF(background_tiles)\n'+c_array('background_tiles',bg)+c_array('sprite_tiles',sprites))
+Path('build/assets.h').write_text('#ifndef ASSETS_H\n#define ASSETS_H\n#define SPRITE_TILE_COUNT 158\nextern const unsigned char background_tiles[];\nextern const unsigned char sprite_tiles[];\n#endif\n')
 sheet=Image.new('RGB',(128,128),(11,18,31)); palette=[(11,18,31),(29,55,69),(54,149,167),(202,236,225)]
 for i,t in enumerate(bg[:128]):
     out=Image.new('RGB',(8,8));out.putdata([palette[p] for p in t.getdata()]);sheet.paste(out,((i%16)*8,(i//16)*8))
 Path('assets').mkdir(exist_ok=True)
 sheet.save('build/tile-sheet.png')
-print('Generated original font, scenery, portrait and 90 sprite tiles')
+print('Generated original font, scenery, portrait and 158 sprite tiles')

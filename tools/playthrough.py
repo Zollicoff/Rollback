@@ -49,6 +49,14 @@ class Pilot:
         self.c=console;self.mode=mode;self.route=0;self.frames=0
         self.checkpoint_seen=False;self.checkpoint_time=None
 
+    def fly(self,buttons,frames):
+        # A flight input must not become a fresh A press on a radio page that
+        # opened between aiming and firing. Wait out LCD redraws neutrally.
+        for _ in range(120):
+            if self.c.emu.memory[0xff40]&0x80:break
+            self.c.hold([],1)
+        if self.c.line(0).startswith('HP'):self.c.hold(buttons,frames)
+
     def step(self):
         c=self.c
         for _ in range(20):
@@ -65,7 +73,7 @@ class Pilot:
         closest=lambda things:min(things,key=lambda s:abs(px-s[0])+abs(py-s[1])) if things else None
         target=closest(enemies);navigation=None;channel=False;pursuit=False
         if self.mode in ('RAID','SABOTAGE'):
-            towers=[s for s in objects if s[2]==44]
+            towers=[s for s in objects if s[2] in (44,98,102,106,146)]
             target=closest(towers)
             if self.mode=='SABOTAGE' and target:
                 channel=abs(px-target[0])<16 and abs(py-target[1])<16
@@ -87,8 +95,10 @@ class Pilot:
             navigation=route[self.route]
             if abs(px-navigation[0])+abs(py-navigation[1])<14:self.route=(self.route+1)%4
         elif self.mode in ('BOSS','CHASE'):
-            target=closest([s for s in enemies if s[2]==56])
-            if target:navigation=(target[0],target[1]+(32 if self.mode=='CHASE' else 48))
+            target=c.sprite(2)
+            if self.mode=='BOSS' and not target:target=closest(enemies)
+            if target:
+                navigation=(target[0],target[1]+32) if self.mode=='CHASE' else (target[0]+(24 if (self.frames//64)%2 else -24),target[1]+40)
             else:
                 target=closest(enemies);navigation=hint
                 pursuit=self.mode=='CHASE'
@@ -108,23 +118,23 @@ class Pilot:
         move=path_direction(c,navigation,diagonal=self.mode=='CHASE') if navigation else []
         travel_boost=bool(move) and navigation and abs(px-navigation[0])+abs(py-navigation[1])>64 and 'B OK' in c.line(0)
         if channel:
-            c.hold(['b'],8)
+            self.fly(['b'],8)
         elif pursuit:
             # Keep up with the moving mission target, firing along the route
             # instead of turning back toward each pursuing drone.
-            c.hold(move,2)
-            c.hold(move+['a']+(['b'] if travel_boost else []),6)
+            self.fly(move,2)
+            self.fly(move+['a']+(['b'] if travel_boost else []),6)
         elif target:
             dx,dy=target[0]-px,target[1]-py
             if abs(dx)>abs(dy)*2:dy=0
             elif abs(dy)>abs(dx)*2:dx=0
             aim=steering(dx,dy)
-            c.hold(aim,2)
+            self.fly(aim,2)
             keys=move+['a']
             hostile=[s for i in range(6) if (s:=c.sprite(30+i))]
             if travel_boost or any(abs(px-s[0])+abs(py-s[1])<20 for s in hostile):keys+=['b']
-            c.hold(keys,6)
-        else:c.hold(move+(['b'] if travel_boost else []),8)
+            self.fly(keys,6)
+        else:self.fly(move+(['b'] if travel_boost else []),8)
         self.frames+=8
         if 'CHECKPOINT LOCKED' in c.line(17):
             self.checkpoint_seen=True

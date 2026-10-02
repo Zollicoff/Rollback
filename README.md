@@ -1,36 +1,47 @@
 # Rollback
 
-A native Game Boy Color flight-and-combat game for the **ModRetro Chromatic**. Fly, fight, protect your objectives, and restore the timeline when a sortie goes wrong.
+**Five misfits. One stolen time machine. Zero successful fixes.**
 
-**[Download the playable ROM](https://github.com/Zollicoff/Rollback/releases/tag/v0.3.0-world)** · [Mac & cartridge setup](docs/mac-cartridge-setup.md) · [Build plan](docs/build-plan.md)
+A native Game Boy Color flight-and-combat game for **ModRetro Chromatic**. The campaign follows Teddy, Mae, Felix, Dotty, and Gus through all four episodes of the supplied story.
 
-![Actual Rollback ROM: flying through the scrolling world and reversing direction](docs/images/scrolling.gif)
+**[Download the ROM](https://github.com/Zollicoff/Rollback/releases/tag/v0.4.0-campaign)** · [Mac & cartridge setup](docs/mac-cartridge-setup.md) · [Campaign adaptation](docs/campaign-adaptation.md)
 
-**Current release: v0.3.0 world prototype.** Explore a 1,600 × 1,440 world—ten times the original width and height—with a camera that follows before you reach any edge. Twelve playable drills exercise the Episode 1 systems, from rescue and sabotage to a three-phase boss. These are temporary scenarios; the authored Episode 1 campaign, dialogue, and story events are still to come. Episodes 2–4 are deferred.
+![The actual Rollback cartridge running in the emulator](docs/images/campaign.png)
+
+## Campaign
+
+- **54 missions across four episodes**, with the complete authored briefings, radio exchanges, debriefs, and main ending.
+- An unlocked **Loop 2**, an alternate Mission 53, and the noncombat “Morning After” ending.
+- Large **1,600 × 1,440** worlds, scrolling on both axes before the ship reaches an edge, with a fixed HUD and colored objective arrows.
+- Ten terrain themes: flooded Kestrel, the Channel, night river, air base, server farm, and the changed worlds leading to Day Zero.
+- Defense, raids, escorts, pursuit, survival, rescue, evasion, sabotage, and bosses. Special missions include radar sweeps, duplicate ships, multiple chase targets, peaceful machines, an upload defense, and scripted setbacks that advance the story.
+- Character portraits and moods, story-aware combat barks, eight pickups, four difficulty settings, an archive, and session achievements.
+
+![Teddy's Mission 1 briefing on the native cartridge](docs/images/dialogue.png)
+
+This is the first complete native campaign build. It uses text dialogue and synthesized music/SFX. Physical Chromatic testing and further human balance/polish feedback are still needed. The [adaptation notes](docs/campaign-adaptation.md) explain how the screenplay maps to the handheld, including compressed narrative waits and progress limitations.
 
 ## Play
 
-Download and unzip the [release bundle](https://github.com/Zollicoff/Rollback/releases/tag/v0.3.0-world). Open `rollback-e1-training.gbc` in a Game Boy Color emulator, such as [SameBoy](https://sameboy.github.io/), or follow the [Chromatic cartridge instructions](docs/mac-cartridge-setup.md). The included `.rom` contains identical bytes. The ZIP also includes a quick-start guide, checksums, screenshots, and the verification report.
+Unzip the [release bundle](https://github.com/Zollicoff/Rollback/releases/tag/v0.4.0-campaign) on your MacBook Pro and open `rollback.gbc` in a Game Boy Color emulator. `rollback.rom` contains identical bytes. To use the rewritable cartridge, follow the [Mac setup guide](docs/mac-cartridge-setup.md).
 
 | Control | Action |
 | --- | --- |
 | D-pad | Fly and aim in eight directions |
-| A | Fire; hold to keep your aim while moving |
-| B | Boost; hold beside a sabotage relay to disable it |
-| Start | Pause; restart the sortie with Take a Mulligan |
-| Select | Toggle sound |
+| A | Fire; hold to keep aim while moving; advance briefings/radio |
+| B | Boost; hold beside a sabotage site; talk during the unlocked final encounter |
+| Start | Pause; intentionally advance results/debriefs; rewind after defeat |
+| Select | Toggle sound; return to mission selection from defeat |
 
-On death, Start restores the latest in-game checkpoint; B restarts the sortie. Select returns to the drill menu from the failure screen. Mission results, debriefs, and final completion require a fresh Start press; firing with A cannot dismiss them.
+Radio pauses combat while you read; release A, then press it to advance. On defeat, release the controls briefly; Start restores the checkpoint, B restarts the mission, and Select returns to mission selection. Firing cannot dismiss the results or debrief. Checkpoints include the world, camera, enemies, objectives, timer, power-ups, RNG, and story events.
 
-Waypoint arrows point to nearby and offscreen targets: red for enemies/attack targets, green for protection, cyan for rescue/navigation (including the return home), and amber for sabotage. The primary objective and nearest living enemy each have an arrow; arrows disappear when their target is reached or no longer active.
+Record the **six-digit resume code**. It restores mission access, difficulty, completion, and loop after power-off without relying on cartridge save RAM. Skill achievements and session statistics are not stored in the code. Earlier four-digit training codes belong to the older prototype.
 
-Completed drills unlock the next drill. Record the four-digit resume code to recover progress after switching off. This build does not require cartridge save RAM.
+The cartridge declares **CGB-only, MBC5 (`0x19`), 256 KiB ROM, no external RAM**. Confirm these against the detected cart before writing. See the [release guide](docs/release-guide.md).
 
-See [Mac setup](docs/mac-cartridge-setup.md) and [release instructions](docs/release-guide.md). The ROM is CGB-only, 64 KiB, MBC5 (`0x19`), with no external RAM. Its compatibility with the physical DevDay cartridge still requires detection and a hardware test.
+## Build
 
-## Build from source
-
-Python 3.12+ and `make` are needed. The verified development host is Apple Silicon macOS. Toolchain downloads are pinned to GBDK 4.5.0 and checked against official release SHA-256 digests.
+Python 3.12+ and `make` are required. Development and verification run on Apple Silicon macOS. The local toolchain pins GBDK 4.5.0 and PyBoy 2.7.0.
 
 ```sh
 git clone https://github.com/Zollicoff/Rollback.git
@@ -42,37 +53,19 @@ make test
 make package
 ```
 
-Tools live in ignored `.tools/`; generated output lives in ignored `build/` and `dist/`. `GBDK_HOME` and `PYTHON` can be overridden. The SDL emulator uses arrow keys, A=A, S=B, Return=Start, and Backspace=Select.
+Generated output goes to ignored `build/` and `dist/`; tools live in ignored `.tools/`. Override `GBDK_HOME` or `PYTHON` if needed. The SDL player maps arrow keys to the D-pad, A to A, S to B, Return to Start, and Backspace to Select.
 
-## What is implemented
+## Verification and source
 
-- Large worlds (1,600 × 1,440 pixels), terrain streaming in both directions, a camera with horizontal and vertical padding, a fixed bottom HUD, grid coordinates, and direction indicators for distant objectives. Rescue pods, relays, convoy routes, navigation gates, and the boss use world positions.
-- Eight-direction flight, aim locking, boost, projectile collisions, cover, enemy drones, hull damage, repair pickups, and synthesized music/SFX.
-- Defense, raid, escort, chase, survival, rescue, evade, sabotage, and a three-phase boss.
-- Briefing, mission, debrief, replay selection, pause, failure, checkpoint restoration, and a Timeline Damage result.
-- Complete checkpoint snapshots of mission state, including enemies, projectiles, objectives, score, timers, and the random generator; retry count remains outside the snapshot.
-- Original pixel font, vehicle sprites, terrain, a generic flight-operations portrait, and three training environments based on the supplied Episode 1 setting.
-- Editable JSON scenario text compiled to ROM data, deterministic art generation, ROM validation, and automated emulator playthroughs.
+`make test` runs the actual cartridge using controller input and observes LCD output, OAM, and audio. It checks ROM integrity, sound, passwords, checkpoints, camera movement and boundaries, objective arrows, all 54 missions, and the alternate ending. Displayed briefings and debriefs are compared with the supplied Markdown independently of the content compiler. Tests do not modify game RAM or inject victories. The release includes the exact ROM hash and results in `verification.json`.
 
-## Verification
+- `story/source/`: all nine supplied documents, unchanged, with an import hash manifest.
+- `data/campaign.json`: mission layouts, routes, rules, and balance parameters.
+- `src/`: native runtime, story progression, barks, bank readers, rendering, menus, and audio.
+- `tools/campaign.py`: validated screenplay-to-ROM compilation.
+- `tools/assets.py`, `tools/portraits.py`: native pixel art and tile generation.
+- `tools/verify_campaign.py`: cartridge verification and mission playthroughs.
 
-`make test` boots the actual ROM in PyBoy 2.7.0, uses buttons to interact with it, and observes its LCD, audio, and sprites. It does not modify game RAM or inject mission victories. It checks ROM checksums, audio/mute, movement/fire/pause, invalid and fresh-boot resume codes, checkpoint recovery after death, and completion of all twelve training scenarios. Scrolling checks cover travel to all four world corners and back, both camera axes and reversals, fixed HUD pixels, distant-object clipping, all boundaries, diagonal panning, and restoration of a distant checkpoint. The release includes the result report and screenshots.
+Earlier training releases remain available in [Releases](https://github.com/Zollicoff/Rollback/releases). [Build history](docs/build-plan.md) records the platform and scope changes. Report play issues with the mission number, difficulty, release version, and emulator or hardware.
 
-Physical cartridge boot, controls, audio, and power-cycle testing are outstanding. Canonical narrative integration, authored Episode 1 layouts, character-specific portraits/barks, and final balancing are also outstanding. Episodes 2–4 are deferred.
-
-## Source layout
-
-- `src/`: runtime, rendering, menus, audio.
-- `data/training.json`: temporary scenario definitions and text.
-- `tools/assets.py`: original pixel artwork and 2bpp encoding.
-- `tools/content.py`: content validation and C generation.
-- `tools/verify.py`, `tools/playthrough.py`: cartridge-boundary verification.
-- `docs/build-plan.md`: scope, completed work, and remaining work.
-
-Runtime acknowledgments and the GBDK library linking exception are in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
-
-## Feedback and project status
-
-Play reports are welcome in [Issues](https://github.com/Zollicoff/Rollback/issues). Include the release version, emulator or hardware, drill number, and what happened. For checkpoints or resume codes, describe the steps leading to the problem.
-
-The project has not yet selected a general source or asset license. The third-party notices apply to their named components.
+The project has not selected a general source or asset license. Runtime acknowledgments and the GBDK library linking exception are in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
